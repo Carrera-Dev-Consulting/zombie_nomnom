@@ -30,6 +30,6 @@ class DieBag(BaseModel):
             dice=[
                 *(create_die(DieColor.GREEN) for _ in range(6)),
                 *(create_die(DieColor.YELLOW) for _ in range(4)),
-                *(create_die(DieColor.RED for _ in range(3))),
+                *(create_die(DieColor.RED) for _ in range(3)),
             ],
         )
