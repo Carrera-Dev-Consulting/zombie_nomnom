@@ -1,0 +1,52 @@
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+
+[project]
+name = "zombie_dice"
+dynamic = ["version"]
+description = "A Zombie Dice Game Engine Library and Executable"
+readme = "README.md"
+requires-python = ">=3.10"
+
+authors = [
+    { name = "Andres Carrera", email = "andreshcar@live.com" },
+]
+
+classifiers = [
+    "Intended Audience :: Information Technology",
+    "Intended Audience :: Developers",
+
+    "Operating System :: OS Independent",
+
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development",
+    
+    "License :: OSI Approved :: MIT License",
+
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+
+keywords = ["game", "engine", "dice"]
+
+dependencies = [
+    "pydantic>=2.9.2",
+    "click>=8.1.7",
+]
+
+[project.urls]
+Homepage = "https://github.com/carrera-dev-consulting/zombie_dice"
+Documentation = "https://consulting.gxldcptrick.dev/zombie_dice/docs"
+Repository = "https://github.com/carrera-dev-consulting/zombie_dice"
+Issues = "https://github.com/carrera-dev-consulting/zombie_dice/issues"
+Changelog = "https://github.com/carrera-dev-consulting/zombie_dice/releases"
+
+[tool.pdm]
+version = { source = "file", path = "zombie_dice/__init__.py" }
+distribution = true
+
