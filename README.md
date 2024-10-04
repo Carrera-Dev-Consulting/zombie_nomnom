@@ -9,9 +9,9 @@
 | zombie\_dice/cli.py                 |       12 |       12 |      0% |      6-37 |
 | zombie\_dice/engine.py              |       67 |       20 |     70% |93-94, 97-100, 103-109, 113, 116-126 |
 | zombie\_dice/models/\_\_init\_\_.py |        0 |        0 |    100% |           |
-| zombie\_dice/models/bag.py          |       18 |        6 |     67% | 14, 17-22 |
+| zombie\_dice/models/bag.py          |       22 |        2 |     91% |     21-22 |
 | zombie\_dice/models/dice.py         |       26 |        0 |    100% |           |
-|                           **TOTAL** |  **136** |   **50** | **63%** |           |
+|                           **TOTAL** |  **140** |   **46** | **67%** |           |
 
 
 ## Setup coverage badge
