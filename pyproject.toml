@@ -10,9 +10,7 @@ description = "A Zombie Dice Game Engine Library and Executable"
 readme = "README.md"
 requires-python = ">=3.10"
 
-authors = [
-    { name = "Andres Carrera", email = "andreshcar@live.com" },
-]
+authors = [{ name = "Andres Carrera", email = "andreshcar@live.com" }]
 
 classifiers = [
     "Intended Audience :: Information Technology",
@@ -23,7 +21,7 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Software Development :: Libraries",
     "Topic :: Software Development",
-    
+
     "License :: OSI Approved :: MIT License",
 
     "Programming Language :: Python :: 3 :: Only",
@@ -34,10 +32,7 @@ classifiers = [
 
 keywords = ["game", "engine", "dice"]
 
-dependencies = [
-    "pydantic>=2.9.2",
-    "click>=8.1.7",
-]
+dependencies = ["pydantic>=2.9.2", "click>=8.1.7"]
 
 [project.urls]
 Homepage = "https://github.com/carrera-dev-consulting/zombie_dice"
@@ -47,6 +42,5 @@ Issues = "https://github.com/carrera-dev-consulting/zombie_dice/issues"
 Changelog = "https://github.com/carrera-dev-consulting/zombie_dice/releases"
 
 [tool.pdm]
-version = { source = "file", path = "zombie_dice/__init__.py" }
+version = { source = "scm" }
 distribution = true
-
