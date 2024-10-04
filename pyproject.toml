@@ -42,7 +42,7 @@ Issues = "https://github.com/carrera-dev-consulting/zombie_nomnom/issues"
 Changelog = "https://github.com/carrera-dev-consulting/zombie_nomnom/releases"
 
 [project.scripts]
-zombie-dice = "zombie_nomnom.app:main"
+zombie-nomnom = "zombie_nomnom.app:main"
 
 [tool.pdm]
 version = { source = "scm" }
