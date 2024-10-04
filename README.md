@@ -3,7 +3,7 @@ Zombie Dice
 
 This is a game engine that is modeled after the popular board game zombie dice. This is meant for practice to be able to be messed with and explored.
 
-[![Test Coverage](https://github.com/Carrera-Dev-Consulting/zombie_dice/actions/workflows/test-coverage.yml/badge.svg)](https://github.com/Carrera-Dev-Consulting/zombie_dice/actions/workflows/test-coverage.yml)
+[![Test and Deploy Docs](https://github.com/Carrera-Dev-Consulting/zombie_dice/actions/workflows/deploy-docs.yaml/badge.svg)](https://github.com/Carrera-Dev-Consulting/zombie_dice/actions/workflows/deploy-docs.yaml)
 
 Useful Links
 ---
