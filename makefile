@@ -8,7 +8,7 @@ docs:
 	pdoc ./zombie_dice
 build-docs:
 	make cov-all
-	pdoc zombie_dice -o ./docs
+	pdoc ./zombie_dice -o ./docs
 cov-all:
 	pytest tests --cov=zombie_dice --cov-report=html:docs/coverage --html=docs/coverage/report.html
 format:
