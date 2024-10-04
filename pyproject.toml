@@ -46,6 +46,9 @@ Repository = "https://github.com/carrera-dev-consulting/zombie_dice"
 Issues = "https://github.com/carrera-dev-consulting/zombie_dice/issues"
 Changelog = "https://github.com/carrera-dev-consulting/zombie_dice/releases"
 
+[project.scripts]
+zombie-dice = "zombie_dice.app:main"
+
 [tool.pdm]
 version = { source = "file", path = "zombie_dice/__init__.py" }
 distribution = true
