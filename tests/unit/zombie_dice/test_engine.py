@@ -1,7 +1,7 @@
 import pytest
-from zombie_dice.models.bag import DieBag
-from zombie_dice.models.dice import Die, Face
-from zombie_dice.engine import PlayerScore, RoundState, ZombieDieGame
+from zombie_nomnom.models.bag import DieBag
+from zombie_nomnom.models.dice import Die, Face
+from zombie_nomnom.engine import PlayerScore, RoundState, ZombieDieGame
 
 
 @pytest.fixture

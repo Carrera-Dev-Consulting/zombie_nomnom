@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from typing import Callable
 from pydantic import BaseModel, Field
 
-from zombie_dice.models.dice import Die
+from zombie_nomnom.models.dice import Die
 from .models.bag import DieBag
 
 
