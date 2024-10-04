@@ -1,4 +1,4 @@
-name: Deploy Docs
+name: Test and Deploy Docs
 
 # build the documentation whenever there are new commits on main
 on:
