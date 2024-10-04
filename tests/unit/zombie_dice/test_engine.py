@@ -6,23 +6,25 @@ from zombie_dice.engine import PlayerScore, RoundState, ZombieDieGame
 
 @pytest.fixture
 def existing_player():
-    return PlayerScore(name="tester", total_brains=2, hand=[Die([Face.BRAIN] * 6)])
+    return PlayerScore(
+        name="tester", total_brains=2, hand=[Die(faces=[Face.BRAIN] * 6)]
+    )
 
 
 @pytest.fixture
 def bag_function():
     def func():
         return DieBag.standard_bag()
+
     return func
 
 
 @pytest.fixture
 def basic_game(bag_function):
     return ZombieDieGame(
-        players=[PlayerScore(name='tester')],
+        players=[PlayerScore(name="tester")],
         bag_function=bag_function,
     )
-
 
 
 def test__player_score__reset__resets_total_brains_and_hand_but_keeps_name(
@@ -52,25 +54,25 @@ def test__player_score__add_dice__joins_passed_dice_with_existing_empty_hand():
     existing_player = PlayerScore(name="tester", total_brains=0, hand=[])
 
     # act
-    sut = existing_player.add_dice(Die([Face.BRAIN] * 6))
+    sut = existing_player.add_dice(Die(faces=[Face.BRAIN] * 6))
 
     # assert
 
-    assert sut.hand == [Die([Face.BRAIN] * 6)]
+    assert sut.hand == [Die(faces=[Face.BRAIN] * 6)]
 
 
 def test__player_score__add_dice__joins_passed_dice_with_existing_filled_hand():
     # arrange
     existing_player = PlayerScore(
-        name="tester", total_brains=0, hand=[Die([Face.BRAIN] * 6)] * 3
+        name="tester", total_brains=0, hand=[Die(faces=[Face.BRAIN] * 6)] * 3
     )
 
     # act
-    sut = existing_player.add_dice(Die([Face.BRAIN] * 6))
+    sut = existing_player.add_dice(Die(faces=[Face.BRAIN] * 6))
 
     # assert
 
-    assert sut.hand == [Die([Face.BRAIN] * 6)] * 4
+    assert sut.hand == [Die(faces=[Face.BRAIN] * 6)] * 4
 
 
 def test__player_score__add_brains__adds_brains_to_total_brains(existing_player):
@@ -89,7 +91,7 @@ def test__zombie_die_game__init_raises_value_error_when_players_is_zero():
 
 
 def test__zombie_die_game__reset_bag_calls_passed_bag_function_and_sets_to_standard_bag(
-    basic_game
+    basic_game,
 ):
     # act
     assert basic_game.bag is None  # make sure there is no bag before we reset
@@ -97,4 +99,4 @@ def test__zombie_die_game__reset_bag_calls_passed_bag_function_and_sets_to_stand
 
     # assert
     assert isinstance(basic_game.bag, DieBag)
-    assert basic_game.bag.dice == DieBag.standard_bag()
+    assert basic_game.bag.dice == DieBag.standard_bag().dice

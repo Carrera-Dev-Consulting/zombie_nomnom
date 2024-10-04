@@ -47,16 +47,14 @@ def test_create_die__when_given_invalid_color__raises_value_error():
         create_die("bogus")
 
 
-def test_create_die__when_given_valid_color__returns_expected_faces(mocker):
-    # arrange
-    with mocker.patch("zombie_dice.models.dice._dice_face_mapping") as mocked_face_map:
-        mocked_face_map = {
-            DieColor.GREEN: {Face.BRAIN: 3, Face.FOOT: 2, Face.SHOTGUN: 1}
-        }
-        expected_result = [Face.BRAIN] * 3 + [Face.FOOT] * 2 + [Face.SHOTGUN] * 1
-
-        # act
-        sut = create_die(DieColor.GREEN)
-
-        # assert
-        sut.faces = expected_result
+@pytest.mark.parametrize(
+    "color, sides",
+    [
+        (DieColor.GREEN, [Face.BRAIN] * 3 + [Face.FOOT] * 2 + [Face.SHOTGUN] * 1),
+        (DieColor.YELLOW, [Face.BRAIN] * 2 + [Face.FOOT] * 2 + [Face.SHOTGUN] * 2),
+        (DieColor.RED, [Face.BRAIN] * 1 + [Face.FOOT] * 2 + [Face.SHOTGUN] * 3),
+    ],
+)
+def test_create_die__when_given_valid_color__returns_expected_die(color, sides):
+    sut = create_die(color)
+    assert sut.faces == sides
