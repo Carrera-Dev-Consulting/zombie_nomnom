@@ -1,5 +1,5 @@
 import pytest
-from zombie_dice.models.bag import DieBag
+from zombie_nomnom.models.bag import DieBag
 
 
 def test_die_bag__when_creating_standard_bag__contains_13_dice():

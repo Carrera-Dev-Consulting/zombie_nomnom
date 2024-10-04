@@ -1,5 +1,5 @@
 import pytest
-from zombie_dice.models.dice import Die, DieColor, Face, create_die
+from zombie_nomnom.models.dice import Die, DieColor, Face, create_die
 
 
 def create_test_die() -> Die:

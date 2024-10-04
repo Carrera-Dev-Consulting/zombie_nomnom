@@ -1,4 +1,4 @@
-Zombie Dice
+Zombie Nom Nom
 ===
 
 This is a game engine that is modeled after the popular board game zombie dice. This is meant for practice to be able to be messed with and explored.
