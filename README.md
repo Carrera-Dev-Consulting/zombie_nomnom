@@ -12,6 +12,7 @@ Links to result of code coverage and pytest of latest builds.
 
 * [Coverage Report](https://consulting.gxldcptrick.dev/zombie_dice/coverage/)
 * [Latest Test Run](https://consulting.gxldcptrick.dev/zombie_dice/coverage/report.html)
+* [Documentation](https://consulting.gxldcptrick.dev/zombie_dice/)
 
 Installation
 ---
