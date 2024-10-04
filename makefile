@@ -10,6 +10,6 @@ build-docs:
 	make cov-all
 	pdoc zombie_dice -o ./docs
 cov-all:
-	pytest tests --cov=zombie_dice --cov-report=html:docs/coverage
+	pytest tests --cov=zombie_dice --cov-report=html:docs/coverage --html=docs/coverage/report.html
 format:
 	black .
