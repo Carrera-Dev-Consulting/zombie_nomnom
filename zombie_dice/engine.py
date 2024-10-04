@@ -89,17 +89,17 @@ class ZombieDieGame:
     def reset_bag(self):
         self.bag = self.bag_function()
 
-    def reset_players(self):# TODO(dean): Test
+    def reset_players(self):  # TODO(dean): Test
         self.players = [player.reset() for player in self.players]
         self.current_player = None
 
-    def reset_game(self):# TODO(dean): Test
+    def reset_game(self):  # TODO(dean): Test
         self.reset_bag()
         self.reset_players()
         self.round = None
         self.commands = []
 
-    def next_round(self):# TODO(dean): Test
+    def next_round(self):  # TODO(dean): Test
         self.reset_bag()
         if self.current_player is None:
             self.current_player = 0
@@ -112,7 +112,7 @@ class ZombieDieGame:
         # TODO(Milo): Check for game over.
         pass
 
-    def process_command(self, command: Command):# TODO(dean): Test
+    def process_command(self, command: Command):  # TODO(dean): Test
         if self.game_over:
             raise ValueError("Cannot command an ended game please reset game.")
 
