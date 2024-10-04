@@ -15,7 +15,7 @@ def run_game():
 
 def setup_game() -> ZombieDieGame:
     names = prompt_list(
-        "Enter Player Name: ",
+        "Enter Player Name",
         _type=str,
         confirmation_prompt="Add Another Player?",
     )
@@ -35,3 +35,4 @@ def prompt_list(
 
     while click.confirm(confirmation_prompt):
         inputs.append(click.prompt(prompt, type=_type))
+    return inputs
