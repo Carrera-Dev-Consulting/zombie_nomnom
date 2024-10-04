@@ -7,6 +7,7 @@ on:
       - main
     paths:
       - 'zombie_dice/**'
+      - 'tests/**'
 
 # security: restrict permissions for CI jobs.
 permissions:
@@ -25,7 +26,7 @@ jobs:
       # ADJUST THIS: install all dependencies (including pdoc)
       - run: pip install .
       - run: pip install -r requirements-dev.txt
-      - run: pdoc zombie_dice -o ./docs
+      - run: make build-docs
       - uses: actions/upload-pages-artifact@v3
         with:
           path: docs/

@@ -11,10 +11,10 @@ class DieBag(BaseModel):
 
     @property
     def is_empty(self):
-        return len(self.dice) == 0
+        return len(self) == 0
 
     def draw_die(self) -> "DieBag":
-        total = len(self.dice)
+        total = len(self)
         if total == 0:
             raise ValueError("Cannot draw_die from empty bag")
 
@@ -23,6 +23,12 @@ class DieBag(BaseModel):
             dice=[die for index, die in enumerate(self.dice) if index != selected_die],
             selected_die=self.dice[selected_die],
         )
+
+    def __len__(self):
+        return len(self.dice)
+
+    def __bool__(self):
+        return len(self) > 0
 
     @classmethod
     def standard_bag(cls):
