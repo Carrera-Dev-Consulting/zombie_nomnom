@@ -26,7 +26,10 @@ We require at least python 3.10 to be able to run properly.
 Usage
 ---
 
-# TODO(Dean): Fill in with details on how to use the die.
+```python
+from zombie_nomnom import bag
+
+```
 
 Contribution
 ---
