@@ -29,10 +29,7 @@ def basic_game(bag_function):
 
 @pytest.fixture
 def starter_round(bag_function, existing_player):
-    return RoundState(
-        bag=bag_function(),
-        player=existing_player
-    )
+    return RoundState(bag=bag_function(), player=existing_player)
 
 
 @pytest.fixture
@@ -40,6 +37,7 @@ def ended_command():
     class BasicCommand(Command):
         def execute(self, state: RoundState) -> RoundState:
             state.ended = True
+
     return BasicCommand()
 
 
@@ -48,6 +46,7 @@ def do_nothing_command():
     class DoNothingCommand(Command):
         def execute(self, state: RoundState) -> RoundState:
             pass
+
     return DoNothingCommand()
 
 
@@ -141,12 +140,12 @@ def test__zombie_die_game__reset_players__sets_current_player_to_none(
 
 
 def test__zombie_die_game__reset_players__calls_player_reset_one_time_per_player(
-        basic_game,
-        mocker,
+    basic_game,
+    mocker,
 ):
     # arrange
     # mock called functions to only test the unit of code in act
-    mocked_reset = mocker.patch('zombie_nomnom.engine.PlayerScore')
+    mocked_reset = mocker.patch("zombie_nomnom.engine.PlayerScore")
     mocked_reset.reset.return_value = None
     # act
     basic_game.reset_players()
@@ -161,9 +160,11 @@ def test__zombie_die_game__reset_game__calls_reset_bag_and_reset_players(
 ):
     # arrange
     # mock called functions to only test the unit of code in act
-    mocked_reset_bag = mocker.patch('zombie_nomnom.engine.ZombieDieGame.reset_bag')
+    mocked_reset_bag = mocker.patch("zombie_nomnom.engine.ZombieDieGame.reset_bag")
     mocked_reset_bag.return_value = None
-    mocked_reset_players = mocker.patch('zombie_nomnom.engine.ZombieDieGame.reset_players')
+    mocked_reset_players = mocker.patch(
+        "zombie_nomnom.engine.ZombieDieGame.reset_players"
+    )
     mocked_reset_players.return_value = None
 
     # act
@@ -181,9 +182,11 @@ def test__zombie_die_game__reset_game__sets_round_to_None_and_commands_to_empty_
 ):
     # arrange
     # mock called functions to only test the unit of code in act
-    mocked_reset_bag = mocker.patch('zombie_nomnom.engine.ZombieDieGame.reset_bag')
+    mocked_reset_bag = mocker.patch("zombie_nomnom.engine.ZombieDieGame.reset_bag")
     mocked_reset_bag.return_value = None
-    mocked_reset_players = mocker.patch('zombie_nomnom.engine.ZombieDieGame.reset_players')
+    mocked_reset_players = mocker.patch(
+        "zombie_nomnom.engine.ZombieDieGame.reset_players"
+    )
     mocked_reset_players.return_value = None
     basic_game.round = RoundState(
         bag=bag_function(),
@@ -200,12 +203,12 @@ def test__zombie_die_game__reset_game__sets_round_to_None_and_commands_to_empty_
 
 
 def test__zombie_die_game__next_round__calls_reset_bag(
-        basic_game,
-        mocker,
+    basic_game,
+    mocker,
 ):
     # arrange
     # mock called functions to only test the unit of code in act
-    mocked_reset_bag = mocker.patch('zombie_nomnom.engine.ZombieDieGame.reset_bag')
+    mocked_reset_bag = mocker.patch("zombie_nomnom.engine.ZombieDieGame.reset_bag")
     mocked_reset_bag.side_effect = None
     basic_game.bag = basic_game.bag_function()
 
@@ -217,7 +220,7 @@ def test__zombie_die_game__next_round__calls_reset_bag(
 
 
 def test__zombie_die_game__next_round__sets_current_player_to_zero_if_current_player_is_None(
-        basic_game,
+    basic_game,
 ):
     # arrange
     basic_game.current_player = None
@@ -230,8 +233,8 @@ def test__zombie_die_game__next_round__sets_current_player_to_zero_if_current_pl
 
 
 def test__zombie_die_game__next_round__sets_current_player_to_next_index_if_current_player_index_is_less_than_length_of_players(
-        basic_game,
-        existing_player,
+    basic_game,
+    existing_player,
 ):
     # arrange
     basic_game.players.append(existing_player)
@@ -245,8 +248,8 @@ def test__zombie_die_game__next_round__sets_current_player_to_next_index_if_curr
 
 
 def test__zombie_die_game__next_round__sets_current_player_to_zero_when_current_player_index_is_the_last_player_in_list(
-        basic_game,
-        existing_player,
+    basic_game,
+    existing_player,
 ):
     # arrange
     basic_game.players.append(existing_player)
@@ -312,7 +315,7 @@ def test__zombie_die_game__process_command__calls_next_round_if_round_is_none(
 ):
     # arrange
     basic_game.round = None
-    mocked_next_round = mocker.patch('zombie_nomnom.engine.ZombieDieGame.next_round')
+    mocked_next_round = mocker.patch("zombie_nomnom.engine.ZombieDieGame.next_round")
 
     # act
     basic_game.process_command(do_nothing_command)
@@ -327,7 +330,9 @@ def test__zombie_die_game__process_command__calls_check_for_game_over(
     mocker,
 ):
     # arrange
-    mocked_game_over = mocker.patch('zombie_nomnom.engine.ZombieDieGame.check_for_game_over')
+    mocked_game_over = mocker.patch(
+        "zombie_nomnom.engine.ZombieDieGame.check_for_game_over"
+    )
 
     # act
     basic_game.process_command(do_nothing_command)
