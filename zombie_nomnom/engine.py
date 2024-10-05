@@ -100,7 +100,6 @@ class ZombieDieGame:
         self.commands = []
 
     def next_round(self):
-        # TODO: Should this handle if self.round is None or is this handled by the commands?
         self.reset_bag()
         if self.current_player is None:
             self.current_player = 0
@@ -108,6 +107,10 @@ class ZombieDieGame:
             self.current_player = self.current_player + 1
         else:
             self.current_player = 0
+        self.round = RoundState(
+            bag=self.bag,
+            player=self.players[self.current_player]
+        )
 
     def check_for_game_over(self):
         # TODO(Milo): Check for game over.

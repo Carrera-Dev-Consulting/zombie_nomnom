@@ -206,7 +206,8 @@ def test__zombie_die_game__next_round__calls_reset_bag(
     # arrange
     # mock called functions to only test the unit of code in act
     mocked_reset_bag = mocker.patch('zombie_nomnom.engine.ZombieDieGame.reset_bag')
-    mocked_reset_bag.return_value = None
+    mocked_reset_bag.side_effect = None
+    basic_game.bag = basic_game.bag_function()
 
     # act
     basic_game.next_round()
@@ -256,6 +257,23 @@ def test__zombie_die_game__next_round__sets_current_player_to_zero_when_current_
 
     # assert
     basic_game.current_player = 0
+
+
+def test__zombie_die_game__next_round__sets_round_to_new_round_instance_based_on_new_current_player_index(
+    basic_game,
+    existing_player,
+):
+    # arrange
+    basic_game.round = None
+    basic_game.bag = basic_game.bag_function()
+
+    # act
+    basic_game.next_round()
+
+    # assert
+    assert isinstance(basic_game.round, RoundState)
+    assert basic_game.round.bag == basic_game.bag
+    assert basic_game.round.player == basic_game.players[basic_game.current_player]
 
 
 def test__zombie_die_game__process_command__raises_value_eror_when_game_over_is_true(
