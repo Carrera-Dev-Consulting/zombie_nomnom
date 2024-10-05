@@ -107,10 +107,7 @@ class ZombieDieGame:
             self.current_player = self.current_player + 1
         else:
             self.current_player = 0
-        self.round = RoundState(
-            bag=self.bag,
-            player=self.players[self.current_player]
-        )
+        self.round = RoundState(bag=self.bag, player=self.players[self.current_player])
 
     def check_for_game_over(self):
         # TODO(Milo): Check for game over.
