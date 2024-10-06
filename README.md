@@ -33,4 +33,13 @@ from zombie_nomnom import bag
 
 Contribution
 ---
-# TODO(Milo): Add details to how to contribute to the repo
+
+For details of conduct and expactations please refer to [CONTRIBUTION.md](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/blob/main/CONTRIBUTING.md)
+
+Pull requests will be pending review of at least one maintainer.
+
+Pull requests are required to have finished the template checklist before they will be reviewed by a maintainer. 
+
+All code is formatted with the black formatter and we expect types and may run mypy to check that your code is properly typed as expected.
+
+Names should make sense and be self descriptive of the proposed changes.
