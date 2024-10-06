@@ -11,6 +11,14 @@ from .engine import PlayerScore, ZombieDieGame
 def run_game():
     game = setup_game()
     # TODO(Milo): Figure out how to do the thingy
+    render_players(game)
+
+
+def render_players(game: ZombieDieGame):
+    players_listed = ", ".join(
+        f"{player.name} ({player.total_brains})" for player in game.players
+    )
+    print(f"Players: {players_listed}")
 
 
 def setup_game() -> ZombieDieGame:
