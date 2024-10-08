@@ -1,7 +1,13 @@
 import pytest
 from zombie_nomnom.models.bag import DieBag
 from zombie_nomnom.models.dice import Die, Face
-from zombie_nomnom.engine import PlayerScore, RoundState, ZombieDieGame, Command
+from zombie_nomnom.engine import (
+    DrawDice,
+    PlayerScore,
+    RoundState,
+    ZombieDieGame,
+    Command,
+)
 
 
 @pytest.fixture
@@ -339,3 +345,39 @@ def test__zombie_die_game__process_command__calls_check_for_game_over(
 
     # assert
     mocked_game_over.assert_called_once()
+
+
+def test_draw_dice__when_given_a_valid_round__draws_dice_and_rolls_them():
+    sut = DrawDice()
+    player = PlayerScore(name="Ready Player One", hand=[], total_brains=0)
+    round_info = RoundState(
+        bag=DieBag.standard_bag(),
+        player=player,
+        ended=False,
+    )
+
+    new_info = sut.execute(round_info)
+
+    assert isinstance(
+        new_info, RoundState
+    ), f"Was not give a round state but instead {type(new_info)}"
+    new_player = new_info.player
+    assert new_player.name == player.name
+    assert new_player.hand, "Hand is empty"
+
+
+def test_draw_dice__when_drawing_dice__only_gets_three_from_bag():
+    sut = DrawDice()
+    player = PlayerScore(name="Ready Player One", hand=[], total_brains=0)
+    round_info = RoundState(
+        bag=DieBag.standard_bag(),
+        player=player,
+        ended=False,
+    )
+
+    new_info = sut.execute(round_info)
+    old_bag = round_info.bag
+    new_bag = new_info.bag
+    assert (
+        len(old_bag) - len(new_bag) == 3
+    ), f"you have pull not 3 dice: {len(old_bag) - len(new_bag)}"

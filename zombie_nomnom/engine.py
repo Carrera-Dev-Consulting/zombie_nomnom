@@ -59,6 +59,24 @@ class Command(ABC):
         pass
 
 
+class DrawDice(Command):
+    def execute(self, state: RoundState) -> RoundState:
+        # - draw the dice and roll them
+        bag = state.bag.draw_dice(3)
+        player = state.player.add_dice(*bag.drawn_dice)
+        for die in bag.drawn_dice:
+            die.roll()
+
+        # - check to make sure the player isnt dead at end of round
+
+        # - check if end of round has happened skip it
+        return RoundState(
+            bag=bag,
+            player=player,
+            ended=state.ended,
+        )
+
+
 class ZombieDieGame:
     bag: DieBag | None
     players: list[PlayerScore]

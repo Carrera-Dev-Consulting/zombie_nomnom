@@ -1,6 +1,6 @@
 import pytest
 from zombie_nomnom.models.bag import DieBag
-
+from zombie_nomnom.models.dice import create_die, DieColor
 
 def test_die_bag__when_creating_standard_bag__contains_13_dice():
     bag = DieBag.standard_bag()
@@ -26,4 +26,11 @@ def test_die_bag__when_drawing_die_and_bag_empty__raises_value_error():
     bag = DieBag(dice=[])
 
     with pytest.raises(ValueError):
-        bag.draw_die()
+        bag.draw_dice(1)
+
+
+def test_die_bag__when_drawing_one_die__return_new_bag_with_die():
+    bag = DieBag(dice=[create_die(DieColor.GREEN)])
+    result = bag.draw_dice(1)
+    assert bag is not result, "returned the same bag"
+    assert result.drawn_dice
