@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+import operator
 from typing import Callable
 import uuid
 from pydantic import BaseModel, Field
@@ -144,7 +145,7 @@ class DrawDice(Command):
                 if total_dice == self.amount_drawn
                 else round.bag.draw_dice(amount=self.amount_drawn - total_dice)
             )
-        except ValueError:
+        except ValueError as exc:
             return self.execute(
                 round=RoundState(
                     bag=round.bag.add_dice(player.brains),
@@ -210,6 +211,7 @@ class ZombieDieGame:
     bag_function: Callable[[], DieBag]
     round: RoundState | None
     current_player: int | None
+    first_winning_player: int | None
     game_over: bool
     score_threshold: int
 
@@ -220,6 +222,7 @@ class ZombieDieGame:
         bag_function: Callable[[], DieBag] | None = None,
         score_threshold: int = 13,
         current_player: int | None = None,
+        first_winning_player: int | None = None,
         game_over: bool = False,
         round: RoundState | None = None,
     ) -> None:
@@ -237,10 +240,15 @@ class ZombieDieGame:
 
         self.round = round
         self.current_player = current_player
+        self.first_winning_player = first_winning_player
         self.game_over = game_over
 
         if len(self.players) == 0:
             raise ValueError("Not enough players for the game we need at least one.")
+
+    @property
+    def winner(self):
+        return max(self.players, key=operator.attrgetter("total_brains"))
 
     def reset_players(self):
         self.players = [player.reset() for player in self.players]
@@ -252,6 +260,9 @@ class ZombieDieGame:
         self.commands = []
 
     def next_round(self):
+        if self.current_player is not None and self.round:
+            self.players[self.current_player] = self.round.player
+
         if self.current_player is None:
             self.current_player = 0
         elif self.current_player + 1 < len(self.players):
@@ -259,12 +270,39 @@ class ZombieDieGame:
         else:
             self.current_player = 0
         self.round = RoundState(
-            bag=self.bag_function(), player=self.players[self.current_player]
+            bag=self.bag_function(),
+            player=self.players[self.current_player],
+            ended=False,
         )
 
     def check_for_game_over(self):
-        # TODO(Milo): Check for game over.
-        pass
+        if not self.round.ended:
+            return  # Still not done with their turns.
+        game_over = False
+        # GAME IS OVER WHEN THE LAST PLAYER IN A ROUND TAKES THERE TURN
+        # I.E. IF SOMEONE MEETS THRESHOLD AND LAST PLAYER HAS HAD A TURN
+        if len(self.players) == 1 and self.winner.total_brains >= self.score_threshold:
+            game_over = True
+
+        if self.first_winning_player is None:
+            if self.players[self.current_player].total_brains >= self.score_threshold:
+                self.first_winning_player = self.current_player
+        else:
+            if (
+                self.first_winning_player == 0
+                and self.current_player == len(self.players) - 1
+            ):
+                game_over = True
+            elif (
+                self.first_winning_player > self.current_player
+                and self.first_winning_player - self.current_player == 1
+            ):
+                game_over = True
+
+        self.game_over = game_over
+
+    def update_player(self):
+        self.players[self.current_player] = self.round.player
 
     def process_command(self, command: Command):
         if self.game_over:
@@ -276,5 +314,8 @@ class ZombieDieGame:
         self.commands.append((command, self.round))
 
         self.round = command.execute(self.round)
+
+        if self.round.ended:
+            self.update_player()
 
         self.check_for_game_over()
