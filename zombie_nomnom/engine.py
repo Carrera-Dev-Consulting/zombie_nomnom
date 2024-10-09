@@ -73,6 +73,7 @@ class Command(ABC):
         """
             Method to generate a new RoundState that represents modifications on the command.
             
+            **Parameters**
             - round(`RoundState`): the round we are on.
             
             **Returns** `RoundState`
