@@ -454,6 +454,27 @@ def test_draw_dice__when_rolling_dice_with_feet_in_hand__fills_in_remaining_with
     assert len(new_round.bag) == 8
 
 
+def test_draw_dice__when_trying_to_roll_die_with_not_enough_dice_in_bag__copies_brains_into_bag_and_rolls_them():
+    round = RoundState(
+        bag=all_face_bag(Face.BRAIN, amount_in_bag=1),
+        player=Player(
+            name="OuiOui Bagguette",
+            hand=[
+                create_die(Face.FOOT),
+                create_die(Face.BRAIN),
+                create_die(Face.BRAIN),
+            ],
+        ),
+        ended=False,
+    )
+    sut = DrawDice()
+
+    new_round = sut.execute(round)
+
+    assert len(new_round.bag.drawn_dice) == 2
+    assert len(new_round.bag) == 1
+
+
 def test_score__when_scoring__calculates_based_on_players_hand():
     sut = Score()
     player = Player(name="Billy the Goat")
