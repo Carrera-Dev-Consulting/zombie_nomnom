@@ -198,8 +198,8 @@ def test_zombie_die_game__when_resetting_game__calls_resets_all_game_state():
     sut.reset_game()
 
     assert len(sut.players) == 1
-    assert sut.round is None
-    assert sut.current_player == None
+    assert not sut.round.ended
+    assert sut.current_player == 0
 
 
 def test_zombie_die_game__when_round_transitioned__uses_new_round():
@@ -289,17 +289,6 @@ def test_zombie_die_game__when_processing_command__stores_command_in_commands():
     sut.process_command(NoOpCommand())
 
     assert sut.commands
-
-
-def test_zombie_die_game__when_processing_command_on_first_round_of_game__transitions_round_to_first_player():
-    sut = ZombieDieGame(players=["Billy", "Mandy"])
-
-    assert sut.round is None, "Was not None before game is ran"
-
-    sut.process_command(NoOpCommand())
-
-    assert sut.round is not None
-    assert sut.round.player.name == "Billy"  # billy didn't start the round.
 
 
 def test_zombie_die_game__when_determining_game_over__does_not_end_game_when_player_is_ahead_of_winning_player():

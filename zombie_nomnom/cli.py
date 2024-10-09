@@ -3,7 +3,7 @@ The cli version of zombie_dice this is where we manage the state of the game and
 format commands from the cli to apply to the engine and render that to the user.
 """
 
-from typing import Callable, TypeVar
+from typing import Any, Callable, TypeVar
 import click
 
 from .engine import DrawDice, Player, RoundState, Score, ZombieDieGame
@@ -22,13 +22,13 @@ def draw_dice(game: ZombieDieGame):
 
 
 def score_hand(game: ZombieDieGame):
-    click.echo("Scoring Hand...")
+    click.echo("Scoring hand...")
     turn = game.process_command(score_command)
     click.echo(_format_turn_info(turn))
 
 
 def exit(game: ZombieDieGame):
-    click.echo("Ending Game...")
+    click.echo("Ending game...")
     game.game_over = True
 
 
@@ -41,9 +41,6 @@ actions: dict[str, Callable[[ZombieDieGame], None]] = {
 
 def run_game(game: ZombieDieGame | None = None):
     game = game or setup_game()
-    if game.round is None:
-        game.next_round()
-
     while not game.game_over:
         # prime game with initial turn.
         render_players(game)
@@ -82,10 +79,20 @@ def render_players(game: ZombieDieGame):
     click.echo(f"Players: {players_listed}")
 
 
+class StrippedStr(click.ParamType):
+    def convert(
+        self, value: Any, param: click.Parameter | None, ctx: click.Context | None
+    ) -> Any:
+        if isinstance(value, str):
+            return value.strip()
+        else:
+            return str(value).strip()
+
+
 def setup_game() -> ZombieDieGame:
     names = prompt_list(
         "Enter Player Name",
-        _type=str,
+        _type=StrippedStr(),
         confirmation_prompt="Add Another Player?",
     )
     # TODO(Milo): Figure out a bunch of game types to play that we can use as templates for the die.
