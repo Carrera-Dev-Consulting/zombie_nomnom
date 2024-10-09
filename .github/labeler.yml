@@ -1,59 +1,59 @@
 # Changes to the cli launcher for anything
 cli:
   - changed-files:
-    - any-glob-to-any-file: 'zombie_nomnom/cli.py'
+      - any-glob-to-any-file: "zombie_nomnom/cli.py"
 # whenever we make changes to the core lib we tag it
 core:
   - changed-files:
-    - any-glob-to-any-file: 'zombie_nomnom/**'
+      - any-glob-to-any-file: "zombie_nomnom/**"
 # Changes to the api and api related files
 api:
   - changed-files:
-    - any-glob-to-any-file: 'zombie_nomnom/api/**'
+      - any-glob-to-any-file: "zombie_nomnom/api/**"
 # Whenever we updated any of the tests
 tests:
   - changed-files:
-    - any-glob-to-any-file: 
-      - 'tests/**'
-      - '.coveragerc'
+      - any-glob-to-any-file:
+          - "tests/**"
+          - ".coveragerc"
 # Tells us when we updated unit tests
 unit-tests-updated:
   - changed-files:
-    - any-glob-to-any-file: 
-      - 'tests/unit/**'
+      - any-glob-to-any-file:
+          - "tests/unit/**"
 # Tells us when we updated integration tests
 integration-tests-updated:
   - changed-files:
-    - any-glob-to-any-file: 
-      - 'tests/integration/**'
+      - any-glob-to-any-file:
+          - "tests/integration/**"
 # Tells us when devops related files are changing.
 devops:
   - changed-files:
-    - any-glob-to-any-file:
-      - '.github/**'
-      - 'CODEOWNERS'
-      - '.coveragerc'
-    - all-globs-to-all-files:
-      - '!.github/ISSUE_TEMPLATE/**'
+      - any-glob-to-any-file:
+          - ".github/**"
+          - "CODEOWNERS"
+          - ".coveragerc"
+      - all-globs-to-all-files:
+          - "!.github/ISSUE_TEMPLATE/**"
 # Lets us know when we update some rules about the repo.
 rules-updated:
   - changed-files:
-    - any-glob-to-any-file:
-      - 'CODEOWNERS'
-      - 'CODE_OF_CONDUCT.md'
-      - 'CONTRIBUTING.md'
-      - 'LICENSE'
-      - 'SECURITY.md'
-      - 'pull_request_template.md'
-      - '.github/ISSUE_TEMPLATE/**'
-      - '.gitignore'
+      - any-glob-to-any-file:
+          - "CODEOWNERS"
+          - "CODE_OF_CONDUCT.md"
+          - "CONTRIBUTING.md"
+          - "LICENSE"
+          - "SECURITY.md"
+          - "pull_request_template.md"
+          - ".github/ISSUE_TEMPLATE/**"
+          - ".gitignore"
 # Tries its best to tell us when docs are changed.
 docs:
   - changed-files:
-    - any-glob-to-any-file: 'README.md'
+      - any-glob-to-any-file: "README.md"
 # Lets us know if this might cause us to break.
 dependency-updated:
   - changed-files:
-    - any-glob-to-any-file:
-      - 'requirements-dev.txt'
-      - 'pyproject.toml'
+      - any-glob-to-any-file:
+          - "requirements-dev.txt"
+          - "pyproject.toml"
