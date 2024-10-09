@@ -313,9 +313,10 @@ class ZombieDieGame:
 
         self.commands.append((command, self.round))
 
-        self.round = command.execute(self.round)
-
+        resulting_round = command.execute(self.round)
+        self.round = resulting_round
         if self.round.ended:
             self.update_player()
 
         self.check_for_game_over()
+        return resulting_round
