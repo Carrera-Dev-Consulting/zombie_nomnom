@@ -55,9 +55,10 @@ class PlayerScore(BaseModel):
 
 class RoundState(BaseModel):
     """
-        Object representing the state of a round in the game. Keeps track of the bag, player, 
-        and whether or not the round has ended.
+    Object representing the state of a round in the game. Keeps track of the bag, player,
+    and whether or not the round has ended.
     """
+
     bag: DieBag
     player: PlayerScore
     ended: bool = False
@@ -65,21 +66,22 @@ class RoundState(BaseModel):
 
 class Command(ABC):
     """
-        Used to modify round state. Cannot be used to reset game.
+    Used to modify round state. Cannot be used to reset game.
     """
 
     @abstractmethod
     def execute(self, state: RoundState) -> RoundState:  # pragma: no cover
         """
-            Method to generate a new RoundState that represents modifications on the command.
-            
-            **Parameters**
-            - round(`RoundState`): the round we are on.
-            
-            **Returns** `RoundState`
-            
-            New instance of round with modified state.
+        Method to generate a new RoundState that represents modifications on the command.
+
+        **Parameters**
+        - round(`RoundState`): the round we are on.
+
+        **Returns** `RoundState`
+
+        New instance of round with modified state.
         """
+
 
 class DrawDice(Command):
     """
@@ -90,7 +92,7 @@ class DrawDice(Command):
     def execute(self, round: RoundState) -> RoundState:
         """
         Executes a dice draw on a round that is active.
-        
+
         If round is already over will return given round context.
 
         **Parameters**

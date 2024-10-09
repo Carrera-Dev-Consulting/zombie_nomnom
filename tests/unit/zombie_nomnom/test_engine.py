@@ -11,6 +11,7 @@ from zombie_nomnom.engine import (
 
 from pydantic import ValidationError
 
+
 @pytest.fixture
 def existing_player():
     return PlayerScore(
@@ -132,6 +133,7 @@ def test__player_score__when_hand_has_three_shotguns__player_death():
 
     assert sut.is_player_dead(), "He isn't dead bobby"
 
+
 def test__player_score__when_hand_has_two_shotguns__player_is_alive():
     sut = PlayerScore(
         name="death",
@@ -142,6 +144,7 @@ def test__player_score__when_hand_has_two_shotguns__player_is_alive():
     )
 
     assert not sut.is_player_dead(), "He isn't alive bobby"
+
 
 def test__zombie_die_game__init_raises_value_error_when_players_is_zero():
     with pytest.raises(ValueError):
