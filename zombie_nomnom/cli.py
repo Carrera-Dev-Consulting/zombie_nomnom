@@ -5,7 +5,7 @@ format commands from the cli to apply to the engine and render that to the user.
 
 import click
 
-from .engine import PlayerScore, ZombieDieGame
+from .engine import Player, ZombieDieGame
 
 
 def run_game():
@@ -29,7 +29,7 @@ def setup_game() -> ZombieDieGame:
     )
     # TODO(Milo): Figure out a bunch of game types to play that we can use as templates for the die.
     return ZombieDieGame(
-        players=[PlayerScore(name=name) for name in names],
+        players=[Player(name=name) for name in names],
     )
 
 
