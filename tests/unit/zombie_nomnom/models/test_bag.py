@@ -2,6 +2,7 @@ import pytest
 from zombie_nomnom.models.bag import DieBag
 from zombie_nomnom.models.dice import create_die, DieColor
 
+
 def test_die_bag__when_creating_standard_bag__contains_13_dice():
     bag = DieBag.standard_bag()
     assert len(bag) == 13

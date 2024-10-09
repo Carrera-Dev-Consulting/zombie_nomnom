@@ -24,8 +24,10 @@ class DieBag(BaseModel):
         while len(selected_dice) < amount:
             selected_dice.add(random.randint(0, total - 1))
         return DieBag(
-            dice=[die for index, die in enumerate(self.dice) if index not in selected_dice],
-            drawn_dice=[self.dice[index] for index in selected_dice ],
+            dice=[
+                die for index, die in enumerate(self.dice) if index not in selected_dice
+            ],
+            drawn_dice=[self.dice[index] for index in selected_dice],
         )
 
     def __len__(self):
