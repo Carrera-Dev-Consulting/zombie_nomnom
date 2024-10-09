@@ -382,6 +382,16 @@ def test_draw_dice__when_give_not_a_goddamn_round__raises_validation_error():
         sut.execute(object())
 
 
+def test_draw_dice__when_creating_command_with_negative_value__raises_exception():
+    with pytest.raises(ValueError):
+        DrawDice(amount_drawn=-1)
+
+
+def test_draw_dice__when_creating_command_with_zero__raises_exception():
+    with pytest.raises(ValueError):
+        DrawDice(amount_drawn=0)
+
+
 def test_score__when_scoring__calculates_based_on_players_hand():
     sut = Score()
     player = Player(name="Billy the Goat")

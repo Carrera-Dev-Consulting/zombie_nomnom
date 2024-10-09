@@ -18,12 +18,24 @@ class Player(BaseModel):
     total_brains: int = 0
     hand: list[Die] = []
 
+    @property
+    def rerolls(self):
+        return [die for die in self.hand if die.current_face == Face.FOOT]
+
+    @property
+    def brains(self):
+        return [die for die in self.hand if die.current_face == Face.BRAIN]
+
+    @property
+    def shots(self):
+        return [die for die in self.hand if die.current_face == Face.SHOTGUN]
+
     def is_player_dead(self) -> bool:
         # check how many shotguns are in our hand.
         total = 0
-        for die in self.hand:
-            if die.current_face == Face.SHOTGUN:
-                total += 1
+        for _ in self.shots:
+            # TODO(Milo): Later refactor to look at the die and then add whatever number is on these die.
+            total += 1
         # if you have 3 shots you are dead XP
         return total >= 3
 
@@ -55,9 +67,9 @@ class Player(BaseModel):
 
     def calculate_score(self) -> "Player":
         additional_score = 0
-        for die in self.hand:
-            if die.current_face == Face.BRAIN:
-                additional_score += 1
+        for _ in self.brains:
+            # TODO (Milo): For future update where will allow other dice to score a variable amount of points.
+            additional_score += 1
         return Player(
             id=self.id,
             name=self.name,
@@ -123,23 +135,29 @@ class DrawDice(Command):
         """
         if round.ended:
             return round
-        dice_to_roll = round.player.dice_to_reroll
+        player = round.player
+        dice_to_roll = player.rerolls
         total_dice = len(dice_to_roll)
         try:
             bag = (
-                round.bag
+                round.bag.clear_drawn_dice()
                 if total_dice == self.amount_drawn
                 else round.bag.draw_dice(amount=self.amount_drawn - total_dice)
             )
         except ValueError:
-            # Not enough dice just pass back the round info.
-            return round
-        player = round.player.add_dice(*bag.drawn_dice)
+            return self.execute(
+                round=RoundState(
+                    bag=round.bag.add_dice(player.brains),
+                    player=player,
+                    ended=round.ended,
+                )
+            )
+        dice_to_roll.extend(bag.drawn_dice)
+        player = player.add_dice(*bag.drawn_dice)
 
-        for die in bag.drawn_dice:
+        for die in dice_to_roll:
             die.roll()
-        # TODO (Milo): Handle empty bag.
-        # TODO (Milo): Calculate dice to roll based on feet in hand.
+
         ended = player.is_player_dead()
         if ended:
             # TODO(Milo): Add test case to make sure this works.

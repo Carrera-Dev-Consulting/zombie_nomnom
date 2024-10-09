@@ -1,4 +1,6 @@
+from copy import deepcopy
 import random
+from typing import Iterable
 
 from pydantic import BaseModel
 
@@ -7,19 +9,29 @@ from .dice import Die, create_die, DieColor
 
 class DieBag(BaseModel):
     dice: list[Die]
-    drawn_dice: list[Die] | None = None
+    drawn_dice: list[Die] = []
 
     @property
     def is_empty(self):
         return len(self) == 0
+
+    def clear_drawn_dice(self):
+        return DieBag(
+            dice=self.dice,
+        )
+
+    def add_dice(self, dice: Iterable[Die]) -> "DieBag":
+        new_dice = [
+            *(deepcopy(die) for die in self.dice),
+            *(deepcopy(die) for die in dice),
+        ]
+        return DieBag(dice=new_dice, drawn_dice=[])
 
     def draw_dice(self, amount: int = 1) -> "DieBag":
         if amount < 0 or amount > len(self):
             raise ValueError("The die bag does not have enough dice.")
 
         total = len(self)
-        if total == 0:
-            raise ValueError("Cannot draw_die from empty bag")
         selected_dice = set()
         while len(selected_dice) < amount:
             selected_dice.add(random.randint(0, total - 1))
