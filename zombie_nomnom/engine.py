@@ -2,8 +2,9 @@ from abc import ABC, abstractmethod
 from typing import Callable
 from pydantic import BaseModel, Field
 
-from zombie_nomnom.models.dice import Die
+from zombie_nomnom.models.dice import Die, Face
 from .models.bag import DieBag
+from pydantic import validate_call
 
 
 class PlayerScore(BaseModel):
@@ -42,8 +43,21 @@ class PlayerScore(BaseModel):
             total_brains=self.total_brains + brains,
         )
 
+    def is_player_dead(self) -> bool:
+        # check how many shotguns are in our hand.
+        total = 0
+        for die in self.hand:
+            if die.current_face == Face.SHOTGUN:
+                total += 1
+        # if you have 3 shots you are dead XP
+        return total >= 3
+
 
 class RoundState(BaseModel):
+    """
+        Object representing the state of a round in the game. Keeps track of the bag, player, 
+        and whether or not the round has ended.
+    """
     bag: DieBag
     player: PlayerScore
     ended: bool = False
@@ -51,29 +65,55 @@ class RoundState(BaseModel):
 
 class Command(ABC):
     """
-    Used to modify round state. Cannot be used to reset game.
+        Used to modify round state. Cannot be used to reset game.
     """
 
     @abstractmethod
     def execute(self, state: RoundState) -> RoundState:  # pragma: no cover
-        pass
-
+        """
+            Method to generate a new RoundState that represents modifications on the command.
+            
+            - round(`RoundState`): the round we are on.
+            
+            **Returns** `RoundState`
+            
+            New instance of round with modified state.
+        """
 
 class DrawDice(Command):
-    def execute(self, state: RoundState) -> RoundState:
-        # - draw the dice and roll them
-        bag = state.bag.draw_dice(3)
-        player = state.player.add_dice(*bag.drawn_dice)
+    """
+    A command that encapsulates drawing dice and calculating whether or not they died.
+    """
+
+    @validate_call
+    def execute(self, round: RoundState) -> RoundState:
+        """
+        Executes a dice draw on a round that is active.
+        
+        If round is already over will return given round context.
+
+        - round(`RoundState`): the round we are on.
+
+        **Returns** `RoundState`
+
+        New instance of a round with player adding dice to hand.
+        """
+
+        if round.ended:
+            return round
+
+        bag = round.bag.draw_dice(3)
+        player = round.player.add_dice(*bag.drawn_dice)
+
         for die in bag.drawn_dice:
             die.roll()
 
-        # - check to make sure the player isnt dead at end of round
+        ended = player.is_player_dead()
 
-        # - check if end of round has happened skip it
         return RoundState(
             bag=bag,
             player=player,
-            ended=state.ended,
+            ended=ended,
         )
 
 
