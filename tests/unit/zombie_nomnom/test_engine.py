@@ -9,6 +9,7 @@ from zombie_nomnom.engine import (
     Command,
 )
 
+from pydantic import ValidationError
 
 @pytest.fixture
 def existing_player():
@@ -111,6 +112,36 @@ def test__player_score__add_brains__adds_brains_to_total_brains(existing_player)
     # assert
     assert sut.total_brains == 7
 
+
+def create_die(selected_face: Face):
+    return Die(
+        faces=[selected_face or Face.SHOTGUN] * 6,
+        current_face=selected_face,
+    )
+
+
+def test__player_score__when_hand_has_three_shotguns__player_death():
+    sut = PlayerScore(
+        name="death",
+        hand=[
+            create_die(Face.SHOTGUN),
+            create_die(Face.SHOTGUN),
+            create_die(Face.SHOTGUN),
+        ],
+    )
+
+    assert sut.is_player_dead(), "He isn't dead bobby"
+
+def test__player_score__when_hand_has_two_shotguns__player_is_alive():
+    sut = PlayerScore(
+        name="death",
+        hand=[
+            create_die(Face.SHOTGUN),
+            create_die(Face.SHOTGUN),
+        ],
+    )
+
+    assert not sut.is_player_dead(), "He isn't alive bobby"
 
 def test__zombie_die_game__init_raises_value_error_when_players_is_zero():
     with pytest.raises(ValueError):
@@ -381,3 +412,38 @@ def test_draw_dice__when_drawing_dice__only_gets_three_from_bag():
     assert (
         len(old_bag) - len(new_bag) == 3
     ), f"you have pull not 3 dice: {len(old_bag) - len(new_bag)}"
+
+
+def test_draw_dice__when_drawing_dice__check_if_player_is_dead():
+    sut = DrawDice()
+    player = PlayerScore(name="Ready Player One", hand=[], total_brains=0)
+    round_info = RoundState(
+        bag=DieBag.standard_bag(),
+        player=player,
+        ended=False,
+    )
+
+    new_info = sut.execute(round_info)
+    new_player = new_info.player
+    assert new_player.is_player_dead() == new_info.ended
+
+
+def test_draw_dice__when_round_is_already_over__returns_round_as_is():
+    sut = DrawDice()
+    bag = DieBag.standard_bag().draw_dice()
+    player = PlayerScore(name="Ready Player One", hand=bag.drawn_dice, total_brains=0)
+    round_info = RoundState(
+        bag=bag,
+        player=player,
+        ended=True,
+    )
+
+    new_info = sut.execute(round_info)
+
+    assert new_info is round_info, "Created a new round when it should not have."
+
+
+def test_draw_dice__when_give_not_a_goddamn_round__raises_validation_error():
+    sut = DrawDice()
+    with pytest.raises(ValidationError):
+        sut.execute(object())
