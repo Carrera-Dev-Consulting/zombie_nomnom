@@ -311,9 +311,6 @@ class ZombieDieGame:
         if self.game_over:
             raise ValueError("Cannot command an ended game please reset game.")
 
-        if self.round is None or self.round.ended:
-            self.next_round()
-
         self.commands.append((command, self.round))
 
         resulting_round = command.execute(self.round)

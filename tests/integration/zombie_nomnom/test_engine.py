@@ -1,21 +1,5 @@
-from unittest.mock import patch
-
-import pytest
-
 from zombie_nomnom.engine import DrawDice, Score, ZombieDieGame
 from zombie_nomnom.models.dice import Face
-
-
-@pytest.fixture
-def patch_random_randint():
-    with patch("random.randint") as mock_random:
-        yield mock_random
-
-
-@pytest.fixture
-def patch_random_choice():
-    with patch("random.choice") as mock_choice:
-        yield mock_choice
 
 
 def test_zombie_dice_game__plays_a_valid_single_player_game_of_zombie_dice__finishes_in_my_victory(

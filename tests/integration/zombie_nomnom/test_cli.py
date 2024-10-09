@@ -114,3 +114,20 @@ def test_app__when_playing_and_scoring_hand__scores_dice_and_transitions_turn(
     result = run_game_with_input(cli_input)
     assert "Scoring hand..." in result.output, "Did not display scoring hand..."
     assert "Currently Playing dean" in result.output, "Did not display deans turn..."
+
+
+def test_app__when_playing_and_scoring_hand__scores_dice_and_transitions_turn(
+    run_game_with_input: Callable[[str], Result],
+):
+    # this works by putting in the name of the player then new line to tell it to no more players then zero
+    # to select exit option and then final new line to not continue
+    cli_input = """milo
+    y
+    dean
+    n
+    2
+    0
+    """
+    result = run_game_with_input(cli_input)
+    assert "Scoring hand..." in result.output, "Did not display scoring hand..."
+    assert "Currently Playing dean" in result.output, "Did not display deans turn..."
