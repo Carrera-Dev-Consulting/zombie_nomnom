@@ -3,5 +3,9 @@
         "tests"
     ],
     "python.testing.unittestEnabled": false,
-    "python.testing.pytestEnabled": true
+    "python.testing.pytestEnabled": true,
+    "yaml.schemas": {
+        "file:///c%3A/Users/andres/.vscode/extensions/atlassian.atlascode-3.0.10/resources/schemas/pipelines-schema.json": "bitbucket-pipelines.yml",
+        "https://json.schemastore.org/pull-request-labeler-5.json": "file:///c%3A/Users/andres/dev/open-source/zombie_nomnom/.github/labeler.yml"
+    }
 }
