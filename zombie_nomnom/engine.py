@@ -92,6 +92,7 @@ class DrawDice(Command):
         
         If round is already over will return given round context.
 
+        **Parameters**
         - round(`RoundState`): the round we are on.
 
         **Returns** `RoundState`
