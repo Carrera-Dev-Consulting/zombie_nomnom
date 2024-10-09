@@ -17,6 +17,9 @@ build-docs:
 .PHONY: cov-all
 cov-all:
 	pytest tests --cov=zombie_nomnom --cov-report=html:docs/coverage --html=docs/coverage/report.html
+.PHONY: render-cov
+render-cov:
+	python -m http.server -d htmlcov 8081
 .PHONY: format
 format:
 	black .
