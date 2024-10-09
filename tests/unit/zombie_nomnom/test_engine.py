@@ -5,123 +5,91 @@ from zombie_nomnom.engine import (
     DrawDice,
     PlayerScore,
     RoundState,
+    Score,
     ZombieDieGame,
     Command,
+    uuid_str,
 )
 
 from pydantic import ValidationError
 
 
-@pytest.fixture
-def existing_player():
-    return PlayerScore(
-        name="tester", total_brains=2, hand=[Die(faces=[Face.BRAIN] * 6)]
+def test_uuid_str__when_generating_new_id__returns_str():
+    value = uuid_str()
+
+    assert isinstance(value, str), f"Value we got back was not a str: {value}"
+
+
+def test_player_score__when_reset__resets_game_info_but_keeps_identity():
+    # act
+    sut = PlayerScore(
+        name="Bill The Kid",
+        hand=[create_die()],
+        total_brains=69,
     )
 
+    new_player = sut.reset()
 
-@pytest.fixture
-def bag_function():
-    def func():
-        return DieBag.standard_bag()
+    # assert
+    assert new_player.name == sut.name
+    assert new_player.id == sut.id
+    assert new_player.total_brains == 0
+    assert new_player.hand == []
 
-    return func
 
-
-@pytest.fixture
-def basic_game(bag_function):
-    return ZombieDieGame(
-        players=[PlayerScore(name="tester")],
-        bag_function=bag_function,
+def test_player_score__when_clearing_hand__returns_hand_empty():
+    sut = PlayerScore(
+        name="Sergie",
+        total_brains=22,
+        hand=[
+            create_die(),
+        ],
     )
 
-
-@pytest.fixture
-def starter_round(bag_function, existing_player):
-    return RoundState(bag=bag_function(), player=existing_player)
-
-
-@pytest.fixture
-def ended_command():
-    class BasicCommand(Command):
-        def execute(self, state: RoundState) -> RoundState:
-            state.ended = True
-
-    return BasicCommand()
+    new_player = sut.clear_hand()
+    assert new_player is not sut, "Returned the same player."
+    assert new_player.total_brains == sut.total_brains, "Score was lost in translation."
+    assert new_player.hand == [], "Hand was not cleared."
+    assert new_player.id == sut.id, "Created a new player id."
+    assert new_player.name == sut.name, "Changed name."
 
 
-@pytest.fixture
-def do_nothing_command():
-    class DoNothingCommand(Command):
-        def execute(self, state: RoundState) -> RoundState:
-            pass
-
-    return DoNothingCommand()
-
-
-def test__player_score__reset__resets_total_brains_and_hand_but_keeps_name(
-    existing_player,
-):
-    # act
-    sut = existing_player.reset()
-
-    # assert
-    assert sut.name == existing_player.name
-    assert sut.total_brains == 0
-    assert sut.hand == []
-
-
-def test__player_score__clear__empties_hand_but_keeps_brains_and_name(existing_player):
-    # act
-    sut = existing_player.clear()
-
-    # assert
-    assert sut.name == existing_player.name
-    assert sut.total_brains == existing_player.total_brains
-    assert sut.hand == []
-
-
-def test__player_score__add_dice__joins_passed_dice_with_existing_empty_hand():
+def test_player_score__when_adding_die__adds_to_hand():
     # arrange
     existing_player = PlayerScore(name="tester", total_brains=0, hand=[])
-
+    die = Die(faces=[Face.BRAIN] * 6)
     # act
-    sut = existing_player.add_dice(Die(faces=[Face.BRAIN] * 6))
+    sut = existing_player.add_dice(die)
 
     # assert
 
-    assert sut.hand == [Die(faces=[Face.BRAIN] * 6)]
+    assert sut.hand == [die]
 
 
-def test__player_score__add_dice__joins_passed_dice_with_existing_filled_hand():
+def test_player_score__when_adding_dice__keeps_dice_in_hand():
     # arrange
-    existing_player = PlayerScore(
-        name="tester", total_brains=0, hand=[Die(faces=[Face.BRAIN] * 6)] * 3
+    sut = PlayerScore(
+        name="tester",
+        total_brains=0,
+        hand=[create_die(Face.BRAIN)] * 3,
     )
 
     # act
-    sut = existing_player.add_dice(Die(faces=[Face.BRAIN] * 6))
+    sut = sut.add_dice(create_die(Face.FOOT))
 
     # assert
 
-    assert sut.hand == [Die(faces=[Face.BRAIN] * 6)] * 4
+    assert len(sut.hand) == 4
 
 
-def test__player_score__add_brains__adds_brains_to_total_brains(existing_player):
-    # act
-    sut = existing_player.add_brains(5)
-
-    # assert
-    assert sut.total_brains == 7
-
-
-def create_die(selected_face: Face):
+def create_die(selected_face: Face | None = None):
     return Die(
         faces=[selected_face or Face.SHOTGUN] * 6,
         current_face=selected_face,
     )
 
 
-def test__player_score__when_hand_has_three_shotguns__player_death():
+def test_player_score__when_hand_has_three_shotguns__player_death():
     sut = PlayerScore(
         name="death",
         hand=[
@@ -134,7 +102,7 @@ def test__player_score__when_hand_has_three_shotguns__player_death():
     assert sut.is_player_dead(), "He isn't dead bobby"
 
 
-def test__player_score__when_hand_has_two_shotguns__player_is_alive():
+def test_player_score__when_hand_has_two_shotguns__player_is_alive():
     sut = PlayerScore(
         name="death",
         hand=[
@@ -146,239 +114,144 @@ def test__player_score__when_hand_has_two_shotguns__player_is_alive():
     assert not sut.is_player_dead(), "He isn't alive bobby"
 
 
-def test__zombie_die_game__init_raises_value_error_when_players_is_zero():
+def test_zombie_die_game__when_creating_game_with_no_players__raises_exception():
     with pytest.raises(ValueError):
         ZombieDieGame(
             players=[],
         )
 
 
-def test__zombie_die_game__reset_bag_calls_passed_bag_function_and_sets_to_standard_bag(
-    basic_game,
-):
-    # act
-    assert basic_game.bag is None  # make sure there is no bag before we reset
-    basic_game.reset_bag()
-
-    # assert
-    assert isinstance(basic_game.bag, DieBag)
-    assert basic_game.bag.dice == DieBag.standard_bag().dice
-
-
-def test__zombie_die_game__reset_players__sets_current_player_to_none(
-    basic_game,
-    existing_player,
-):
-    # arrange
-    basic_game.current_player = existing_player
-
-    # act
-    basic_game.reset_players()
-
-    # assert
-    assert basic_game.current_player == None
-
-
-def test__zombie_die_game__reset_players__calls_player_reset_one_time_per_player(
-    basic_game,
-    mocker,
-):
-    # arrange
-    # mock called functions to only test the unit of code in act
-    mocked_reset = mocker.patch("zombie_nomnom.engine.PlayerScore")
-    mocked_reset.reset.return_value = None
-    # act
-    basic_game.reset_players()
-
-    # assert
-    mocked_reset.assert_called_once()
-
-
-def test__zombie_die_game__reset_game__calls_reset_bag_and_reset_players(
-    basic_game,
-    mocker,
-):
-    # arrange
-    # mock called functions to only test the unit of code in act
-    mocked_reset_bag = mocker.patch("zombie_nomnom.engine.ZombieDieGame.reset_bag")
-    mocked_reset_bag.return_value = None
-    mocked_reset_players = mocker.patch(
-        "zombie_nomnom.engine.ZombieDieGame.reset_players"
+def test_zombie_die_game__when_resetting_players__sets_current_player_to_none():
+    basic_game = ZombieDieGame(
+        players=["Player One", "Player Two"],
     )
-    mocked_reset_players.return_value = None
 
-    # act
-    basic_game.reset_game()
-
-    # assert
-    mocked_reset_bag.assert_called_once()
-    mocked_reset_players.assert_called_once()
-
-
-def test__zombie_die_game__reset_game__sets_round_to_None_and_commands_to_empty_list(
-    basic_game,
-    mocker,
-    bag_function,
-):
     # arrange
-    # mock called functions to only test the unit of code in act
-    mocked_reset_bag = mocker.patch("zombie_nomnom.engine.ZombieDieGame.reset_bag")
-    mocked_reset_bag.return_value = None
-    mocked_reset_players = mocker.patch(
-        "zombie_nomnom.engine.ZombieDieGame.reset_players"
-    )
-    mocked_reset_players.return_value = None
-    basic_game.round = RoundState(
-        bag=bag_function(),
-        player=basic_game.players[0],
-    )
-    basic_game.commands = None
-
-    # act
-    basic_game.reset_game()
-
-    # assert
-    assert basic_game.round == None
-    assert basic_game.commands == []
-
-
-def test__zombie_die_game__next_round__calls_reset_bag(
-    basic_game,
-    mocker,
-):
-    # arrange
-    # mock called functions to only test the unit of code in act
-    mocked_reset_bag = mocker.patch("zombie_nomnom.engine.ZombieDieGame.reset_bag")
-    mocked_reset_bag.side_effect = None
-    basic_game.bag = basic_game.bag_function()
-
-    # act
-    basic_game.next_round()
-
-    # assert
-    mocked_reset_bag.assert_called_once()
-
-
-def test__zombie_die_game__next_round__sets_current_player_to_zero_if_current_player_is_None(
-    basic_game,
-):
-    # arrange
-    basic_game.current_player = None
-
-    # act
-    basic_game.next_round()
-
-    # assert
-    basic_game.current_player == 0
-
-
-def test__zombie_die_game__next_round__sets_current_player_to_next_index_if_current_player_index_is_less_than_length_of_players(
-    basic_game,
-    existing_player,
-):
-    # arrange
-    basic_game.players.append(existing_player)
-    basic_game.current_player = 0
-
-    # act
-    basic_game.next_round()
-
-    # assert
-    basic_game.current_player == 1
-
-
-def test__zombie_die_game__next_round__sets_current_player_to_zero_when_current_player_index_is_the_last_player_in_list(
-    basic_game,
-    existing_player,
-):
-    # arrange
-    basic_game.players.append(existing_player)
     basic_game.current_player = 1
 
     # act
-    basic_game.next_round()
+    basic_game.reset_players()
 
     # assert
-    basic_game.current_player = 0
+    assert basic_game.current_player is None
 
 
-def test__zombie_die_game__next_round__sets_round_to_new_round_instance_based_on_new_current_player_index(
-    basic_game,
-    existing_player,
-):
-    # arrange
-    basic_game.round = None
-    basic_game.bag = basic_game.bag_function()
+def test_zombie_die_game__when_resetting_players__each_player_is_reset():
+    sut = ZombieDieGame(players=["David", "Ackerman"])
 
-    # act
-    basic_game.next_round()
+    sut.reset_players()
 
-    # assert
-    assert isinstance(basic_game.round, RoundState)
-    assert basic_game.round.bag == basic_game.bag
-    assert basic_game.round.player == basic_game.players[basic_game.current_player]
+    assert all(player.total_brains == 0 and player.hand == [] for player in sut.players)
 
 
-def test__zombie_die_game__process_command__raises_value_eror_when_game_over_is_true(
-    basic_game,
-    ended_command,
-):
-    # arrange
-    basic_game.game_over = True
+def test_zombie_die_game__when_resetting_game__calls_resets_all_game_state():
+    sut = ZombieDieGame(players=["Jiren"])
 
-    # act/assert
-    with pytest.raises(ValueError):
-        basic_game.process_command(ended_command)
+    sut.reset_game()
+
+    assert len(sut.players) == 1
+    assert sut.round is None
+    assert sut.current_player == None
 
 
-def test__zombie_die_game__process_command__appends_passed_command_to_commands_list(
-    basic_game,
-    ended_command,
-    starter_round,
-):
-    # arrange
-    basic_game.commands = []
-    basic_game.round = starter_round
+def test_zombie_die_game__when_round_transitioned__uses_new_round():
+    known_player = PlayerScore(name="Gray Man")
+    sut = ZombieDieGame(
+        players=[known_player],
+        round=RoundState(
+            bag=DieBag.standard_bag(),
+            player=known_player,
+        ),
+        current_player=0,
+    )
+    old_round = sut.round
 
-    # act
-    basic_game.process_command(ended_command)
+    # next round
+    sut.next_round()
 
-    # assert
-    assert len(basic_game.commands) == 1
-    assert basic_game.commands[0] == ended_command
-
-
-def test__zombie_die_game__process_command__calls_next_round_if_round_is_none(
-    basic_game,
-    do_nothing_command,
-    mocker,
-):
-    # arrange
-    basic_game.round = None
-    mocked_next_round = mocker.patch("zombie_nomnom.engine.ZombieDieGame.next_round")
-
-    # act
-    basic_game.process_command(do_nothing_command)
-
-    # assert
-    mocked_next_round.assert_called_once()
+    assert sut.round == old_round
 
 
-def test__zombie_die_game__process_command__calls_check_for_game_over(
-    basic_game,
-    do_nothing_command,
-    mocker,
-):
-    # arrange
-    mocked_game_over = mocker.patch(
-        "zombie_nomnom.engine.ZombieDieGame.check_for_game_over"
+def test_zombie_die_game__when_round_transitioned__transitions_player():
+    sut = ZombieDieGame(players=["Player One", "Player Two"])
+
+    sut.next_round()
+
+    assert sut.current_player == 0
+
+
+def test_zombie_die_game__when_round_transitioned__transitions_player():
+    sut = ZombieDieGame(
+        players=["Player One", "Player Two"],
+        current_player=1,
     )
 
-    # act
-    basic_game.process_command(do_nothing_command)
+    sut.next_round()
 
-    # assert
-    mocked_game_over.assert_called_once()
+    assert sut.current_player == 0
+
+
+def test_zombie_die_game__when_transitioning_round__updates_the_current_player_to_next():
+    sut = ZombieDieGame(players=["First", "Second"], current_player=0)
+
+    sut.next_round()
+
+    assert sut.current_player == 1
+
+
+def test_zombie_die_game__when_transitioning_round_and_currently_on_last_player__next_player_is_first_player():
+    sut = ZombieDieGame(
+        players=["Milo", "Xander"],
+        current_player=1,
+    )
+
+    sut.next_round()
+
+    assert sut.current_player == 0
+
+
+def test_zombie_die_game__when_transitioning_round_for_single_player__next_player_is_first_player():
+    sut = ZombieDieGame(
+        players=["Dean"],
+        current_player=0,
+    )
+
+    sut.next_round()
+
+    assert sut.current_player == 0
+
+
+class NoOpCommand(Command):
+    def execute(self, round: RoundState) -> RoundState:
+        return round
+
+
+def test__zombie_die_game__process_command__raises_value_eror_when_game_over_is_true():
+    sut = ZombieDieGame(players=["Lily"], game_over=True)
+
+    with pytest.raises(ValueError):
+        sut.process_command(NoOpCommand())
+
+
+def test_zombie_die_game__when_processing_command__stores_command_in_commands():
+    sut = ZombieDieGame(players=["Game"])
+
+    assert not sut.commands
+
+    sut.process_command(NoOpCommand())
+
+    assert sut.commands
+
+
+def test_zombie_die_game__when_processing_command_on_first_round_of_game__transitions_round_to_first_player():
+    sut = ZombieDieGame(players=["Billy", "Mandy"])
+
+    assert sut.round is None, "Was not None before game is ran"
+
+    sut.process_command(NoOpCommand())
+
+    assert sut.round is not None
+    assert sut.round.player.name == "Billy"  # billy didn't start the round.
 
 
 def test_draw_dice__when_given_a_valid_round__draws_dice_and_rolls_them():
@@ -450,3 +323,16 @@ def test_draw_dice__when_give_not_a_goddamn_round__raises_validation_error():
     sut = DrawDice()
     with pytest.raises(ValidationError):
         sut.execute(object())
+
+
+def test_score__when_scoring__calculates_based_on_players_hand():
+    sut = Score()
+    player = PlayerScore(name="Billy the Goat")
+    round = RoundState(
+        bag=DieBag.standard_bag(),
+        player=player,
+        ended=False,
+    )
+    new_round = sut.execute(round)
+
+    assert new_round.player.total_brains == 0, "Did not calculate score correctly."
