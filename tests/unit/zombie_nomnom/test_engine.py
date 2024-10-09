@@ -98,6 +98,38 @@ def test_player_score__when_scoring__counts_all_brains():
     assert scored.total_brains == 1
 
 
+def test_player_score__when_scoring_hand_with_no_brains__does_not_change_score():
+    sut = PlayerScore(
+        name="Medical",
+        hand=[
+            create_die(Face.FOOT),
+            create_die(Face.FOOT),
+            create_die(Face.SHOTGUN),
+        ],
+        total_brains=0,
+    )
+
+    scored = sut.calculate_score()
+
+    assert scored.total_brains == 0
+
+
+def test_player_score__when_scoring_hand_with_existing_points__adds_points_together():
+    sut = PlayerScore(
+        name="Medical",
+        hand=[
+            create_die(Face.BRAIN),
+            create_die(Face.FOOT),
+            create_die(Face.SHOTGUN),
+        ],
+        total_brains=11,
+    )
+
+    scored = sut.calculate_score()
+
+    assert scored.total_brains == 12
+
+
 def create_die(selected_face: Face | None = None):
     return Die(
         faces=[selected_face or Face.SHOTGUN] * 6,
