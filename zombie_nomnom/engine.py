@@ -185,6 +185,8 @@ class Score(Command):
 
         Roundstate that is now ended with the player with hand cleared and new score added to them.
         """
+        if round.ended:
+            return round
         player = round.player.calculate_score()
         return RoundState(
             bag=round.bag,

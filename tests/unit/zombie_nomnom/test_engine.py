@@ -486,3 +486,13 @@ def test_score__when_scoring__calculates_based_on_players_hand():
     new_round = sut.execute(round)
 
     assert new_round.player.total_brains == 0, "Did not calculate score correctly."
+
+
+def test_score__when_scoring_already_ended_round__returns_same_round():
+    sut = Score()
+    player = Player(name="Billy the Goat")
+    round = RoundState(bag=DieBag.standard_bag(), player=player, ended=True)
+
+    new_round = sut.execute(round)
+
+    assert new_round is round
