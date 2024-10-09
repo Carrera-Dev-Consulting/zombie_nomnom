@@ -26,7 +26,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: "3.10"
 
       # ADJUST THIS: install all dependencies (including pdoc)
       - run: pip install .
@@ -35,7 +35,7 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
         with:
           path: docs/
-      
+
       # Code Coverage Comment
       - name: Coverage comment
         id: coverage_comment
