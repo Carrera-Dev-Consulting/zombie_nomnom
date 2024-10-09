@@ -254,11 +254,20 @@ def test_zombie_die_game__when_processing_command_on_first_round_of_game__transi
     assert sut.round.player.name == "Billy"  # billy didn't start the round.
 
 
+def all_face_bag(
+    face: Face | None = None,
+    amount_in_bag: int = 12,
+):
+    return DieBag(
+        dice=[create_die(face)] * amount_in_bag,
+    )
+
+
 def test_draw_dice__when_given_a_valid_round__draws_dice_and_rolls_them():
     sut = DrawDice()
     player = PlayerScore(name="Ready Player One", hand=[], total_brains=0)
     round_info = RoundState(
-        bag=DieBag.standard_bag(),
+        bag=all_face_bag(Face.BRAIN),
         player=player,
         ended=False,
     )
@@ -276,15 +285,15 @@ def test_draw_dice__when_given_a_valid_round__draws_dice_and_rolls_them():
 def test_draw_dice__when_drawing_dice__only_gets_three_from_bag():
     sut = DrawDice()
     player = PlayerScore(name="Ready Player One", hand=[], total_brains=0)
-    round_info = RoundState(
-        bag=DieBag.standard_bag(),
+    round = RoundState(
+        bag=all_face_bag(Face.BRAIN),
         player=player,
         ended=False,
     )
 
-    new_info = sut.execute(round_info)
-    old_bag = round_info.bag
-    new_bag = new_info.bag
+    new_round = sut.execute(round)
+    old_bag = round.bag
+    new_bag = new_round.bag
     assert (
         len(old_bag) - len(new_bag) == 3
     ), f"you have pull not 3 dice: {len(old_bag) - len(new_bag)}"
@@ -294,7 +303,7 @@ def test_draw_dice__when_drawing_dice__check_if_player_is_dead():
     sut = DrawDice()
     player = PlayerScore(name="Ready Player One", hand=[], total_brains=0)
     round_info = RoundState(
-        bag=DieBag.standard_bag(),
+        bag=all_face_bag(Face.BRAIN),
         player=player,
         ended=False,
     )
@@ -306,7 +315,7 @@ def test_draw_dice__when_drawing_dice__check_if_player_is_dead():
 
 def test_draw_dice__when_round_is_already_over__returns_round_as_is():
     sut = DrawDice()
-    bag = DieBag.standard_bag().draw_dice()
+    bag = all_face_bag(Face.BRAIN).draw_dice()
     player = PlayerScore(name="Ready Player One", hand=bag.drawn_dice, total_brains=0)
     round_info = RoundState(
         bag=bag,
