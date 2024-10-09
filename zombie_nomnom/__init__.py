@@ -6,7 +6,7 @@
 
 from .models.bag import DieBag
 from .models.dice import Die, DieColor, Face, create_die
-from .engine import Command, ZombieDieGame, PlayerScore, RoundState
+from .engine import Command, ZombieDieGame, Player, RoundState
 
 __version__ = "1.0.0"
 
@@ -21,7 +21,7 @@ __all__ = [
     "Face",
     "create_die",
     "ZombieDieGame",
-    "PlayerScore",
+    "Player",
     "RoundState",
     "Command",
 ]

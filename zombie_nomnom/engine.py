@@ -12,7 +12,7 @@ def uuid_str() -> str:
     return str(uuid.uuid4())
 
 
-class PlayerScore(BaseModel):
+class Player(BaseModel):
     id: str = Field(default_factory=uuid_str)
     name: str
     total_brains: int = 0
@@ -27,38 +27,38 @@ class PlayerScore(BaseModel):
         # if you have 3 shots you are dead XP
         return total >= 3
 
-    def add_dice(self, *dice: Die) -> "PlayerScore":
+    def add_dice(self, *dice: Die) -> "Player":
         """
         Creates a playe score with the dice added to your hand.
         """
-        return PlayerScore(
+        return Player(
             id=self.id,
             name=self.name,
             hand=[*self.hand, *dice],
             total_brains=self.total_brains,
         )
 
-    def clear_hand(self) -> "PlayerScore":
-        return PlayerScore(
+    def clear_hand(self) -> "Player":
+        return Player(
             id=self.id,
             name=self.name,
             total_brains=self.total_brains,
         )
 
-    def reset(self) -> "PlayerScore":
-        return PlayerScore(
+    def reset(self) -> "Player":
+        return Player(
             id=self.id,
             name=self.name,
             total_brains=0,
             hand=[],
         )
 
-    def calculate_score(self) -> "PlayerScore":
+    def calculate_score(self) -> "Player":
         additional_score = 0
         for die in self.hand:
             if die.current_face == Face.BRAIN:
                 additional_score += 1
-        return PlayerScore(
+        return Player(
             id=self.id,
             name=self.name,
             total_brains=additional_score + self.total_brains,
@@ -72,7 +72,7 @@ class RoundState(BaseModel):
     """
 
     bag: DieBag
-    player: PlayerScore
+    player: Player
     ended: bool = False
 
 
@@ -100,6 +100,13 @@ class DrawDice(Command):
     A command that encapsulates drawing dice and calculating whether or not they died.
     """
 
+    amount_drawn: int
+
+    def __init__(self, amount_drawn: int = 3) -> None:
+        if amount_drawn <= 0:
+            raise ValueError("Cannot draw a no or a negative amount of dice.")
+        self.amount_drawn = amount_drawn
+
     @validate_call
     def execute(self, round: RoundState) -> RoundState:
         """
@@ -116,8 +123,17 @@ class DrawDice(Command):
         """
         if round.ended:
             return round
-
-        bag = round.bag.draw_dice(3)
+        dice_to_roll = round.player.dice_to_reroll
+        total_dice = len(dice_to_roll)
+        try:
+            bag = (
+                round.bag
+                if total_dice == self.amount_drawn
+                else round.bag.draw_dice(amount=self.amount_drawn - total_dice)
+            )
+        except ValueError:
+            # Not enough dice just pass back the round info.
+            return round
         player = round.player.add_dice(*bag.drawn_dice)
 
         for die in bag.drawn_dice:
@@ -170,7 +186,7 @@ class ZombieDieGame:
     - `ValueError`: When there is not enough players to play a game.
     """
 
-    players: list[PlayerScore]
+    players: list[Player]
     commands: list[tuple[Command, RoundState]]
     bag_function: Callable[[], DieBag]
     round: RoundState | None
@@ -180,7 +196,7 @@ class ZombieDieGame:
 
     def __init__(
         self,
-        players: list[str | PlayerScore],
+        players: list[str | Player],
         commands: list[Command] | None = None,
         bag_function: Callable[[], DieBag] | None = None,
         score_threshold: int = 13,
@@ -191,7 +207,7 @@ class ZombieDieGame:
         self.commands = list(commands) if commands else []
         self.players = [
             (
-                PlayerScore(name=name_or_score)
+                Player(name=name_or_score)
                 if isinstance(name_or_score, str)
                 else name_or_score
             )

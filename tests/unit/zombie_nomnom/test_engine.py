@@ -3,7 +3,7 @@ from zombie_nomnom.models.bag import DieBag
 from zombie_nomnom.models.dice import Die, Face
 from zombie_nomnom.engine import (
     DrawDice,
-    PlayerScore,
+    Player,
     RoundState,
     Score,
     ZombieDieGame,
@@ -22,7 +22,7 @@ def test_uuid_str__when_generating_new_id__returns_str():
 
 def test_player_score__when_reset__resets_game_info_but_keeps_identity():
     # act
-    sut = PlayerScore(
+    sut = Player(
         name="Bill The Kid",
         hand=[create_die()],
         total_brains=69,
@@ -38,7 +38,7 @@ def test_player_score__when_reset__resets_game_info_but_keeps_identity():
 
 
 def test_player_score__when_clearing_hand__returns_hand_empty():
-    sut = PlayerScore(
+    sut = Player(
         name="Sergie",
         total_brains=22,
         hand=[
@@ -56,7 +56,7 @@ def test_player_score__when_clearing_hand__returns_hand_empty():
 
 def test_player_score__when_adding_die__adds_to_hand():
     # arrange
-    existing_player = PlayerScore(name="tester", total_brains=0, hand=[])
+    existing_player = Player(name="tester", total_brains=0, hand=[])
     die = Die(faces=[Face.BRAIN] * 6)
     # act
     sut = existing_player.add_dice(die)
@@ -68,7 +68,7 @@ def test_player_score__when_adding_die__adds_to_hand():
 
 def test_player_score__when_adding_dice__keeps_dice_in_hand():
     # arrange
-    sut = PlayerScore(
+    sut = Player(
         name="tester",
         total_brains=0,
         hand=[create_die(Face.BRAIN)] * 3,
@@ -83,7 +83,7 @@ def test_player_score__when_adding_dice__keeps_dice_in_hand():
 
 
 def test_player_score__when_scoring__counts_all_brains():
-    sut = PlayerScore(
+    sut = Player(
         name="Medical",
         hand=[
             create_die(Face.BRAIN),
@@ -99,7 +99,7 @@ def test_player_score__when_scoring__counts_all_brains():
 
 
 def test_player_score__when_scoring_hand_with_no_brains__does_not_change_score():
-    sut = PlayerScore(
+    sut = Player(
         name="Medical",
         hand=[
             create_die(Face.FOOT),
@@ -115,7 +115,7 @@ def test_player_score__when_scoring_hand_with_no_brains__does_not_change_score()
 
 
 def test_player_score__when_scoring_hand_with_existing_points__adds_points_together():
-    sut = PlayerScore(
+    sut = Player(
         name="Medical",
         hand=[
             create_die(Face.BRAIN),
@@ -138,7 +138,7 @@ def create_die(selected_face: Face | None = None):
 
 
 def test_player_score__when_hand_has_three_shotguns__player_death():
-    sut = PlayerScore(
+    sut = Player(
         name="death",
         hand=[
             create_die(Face.SHOTGUN),
@@ -151,7 +151,7 @@ def test_player_score__when_hand_has_three_shotguns__player_death():
 
 
 def test_player_score__when_hand_has_two_shotguns__player_is_alive():
-    sut = PlayerScore(
+    sut = Player(
         name="death",
         hand=[
             create_die(Face.SHOTGUN),
@@ -203,7 +203,7 @@ def test_zombie_die_game__when_resetting_game__calls_resets_all_game_state():
 
 
 def test_zombie_die_game__when_round_transitioned__uses_new_round():
-    known_player = PlayerScore(name="Gray Man")
+    known_player = Player(name="Gray Man")
     sut = ZombieDieGame(
         players=[known_player],
         round=RoundState(
@@ -313,7 +313,7 @@ def all_face_bag(
 
 def test_draw_dice__when_given_a_valid_round__draws_dice_and_rolls_them():
     sut = DrawDice()
-    player = PlayerScore(name="Ready Player One", hand=[], total_brains=0)
+    player = Player(name="Ready Player One", hand=[], total_brains=0)
     round_info = RoundState(
         bag=all_face_bag(Face.BRAIN),
         player=player,
@@ -332,7 +332,7 @@ def test_draw_dice__when_given_a_valid_round__draws_dice_and_rolls_them():
 
 def test_draw_dice__when_drawing_dice__only_gets_three_from_bag():
     sut = DrawDice()
-    player = PlayerScore(name="Ready Player One", hand=[], total_brains=0)
+    player = Player(name="Ready Player One", hand=[], total_brains=0)
     round = RoundState(
         bag=all_face_bag(Face.BRAIN),
         player=player,
@@ -349,7 +349,7 @@ def test_draw_dice__when_drawing_dice__only_gets_three_from_bag():
 
 def test_draw_dice__when_drawing_dice__check_if_player_is_dead():
     sut = DrawDice()
-    player = PlayerScore(name="Ready Player One", hand=[], total_brains=0)
+    player = Player(name="Ready Player One", hand=[], total_brains=0)
     round_info = RoundState(
         bag=all_face_bag(Face.BRAIN),
         player=player,
@@ -364,7 +364,7 @@ def test_draw_dice__when_drawing_dice__check_if_player_is_dead():
 def test_draw_dice__when_round_is_already_over__returns_round_as_is():
     sut = DrawDice()
     bag = all_face_bag(Face.BRAIN).draw_dice()
-    player = PlayerScore(name="Ready Player One", hand=bag.drawn_dice, total_brains=0)
+    player = Player(name="Ready Player One", hand=bag.drawn_dice, total_brains=0)
     round_info = RoundState(
         bag=bag,
         player=player,
@@ -384,7 +384,7 @@ def test_draw_dice__when_give_not_a_goddamn_round__raises_validation_error():
 
 def test_score__when_scoring__calculates_based_on_players_hand():
     sut = Score()
-    player = PlayerScore(name="Billy the Goat")
+    player = Player(name="Billy the Goat")
     round = RoundState(
         bag=DieBag.standard_bag(),
         player=player,
