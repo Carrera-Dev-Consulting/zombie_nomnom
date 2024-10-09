@@ -302,6 +302,228 @@ def test_zombie_die_game__when_processing_command_on_first_round_of_game__transi
     assert sut.round.player.name == "Billy"  # billy didn't start the round.
 
 
+def test_zombie_die_game__when_determining_game_over__does_not_end_game_when_player_is_ahead_of_winning_player():
+    turn_player = Player(
+        name="Two",
+        total_brains=11,
+    )
+    sut = ZombieDieGame(
+        players=[
+            Player(name="Player", total_brains=15),
+            turn_player,
+            Player(name="Tres", total_brains=12),
+        ],
+        round=RoundState(
+            bag=DieBag.standard_bag(),
+            player=turn_player,
+            ended=True,
+        ),
+        current_player=1,
+        first_winning_player=0,
+    )
+
+    sut.check_for_game_over()
+
+    assert not sut.game_over
+
+
+def test_zombie_die_game__when_determining_game_over_on_an_active_round__does_not_end_game():
+    turn_player = Player(
+        name="Two",
+        total_brains=11,
+    )
+    sut = ZombieDieGame(
+        players=[
+            Player(name="Player", total_brains=15),
+            turn_player,
+            Player(name="Tres", total_brains=12),
+        ],
+        round=RoundState(
+            bag=DieBag.standard_bag(),
+            player=turn_player,
+            ended=False,
+        ),
+        current_player=1,
+        first_winning_player=0,
+    )
+
+    sut.check_for_game_over()
+
+    assert not sut.game_over
+
+
+def test_zombie_die_game__when_determining_game_over_and_first_player_won_and_last_players_turn_just_ended__ends_game():
+    turn_player = Player(
+        name="Two",
+        total_brains=11,
+    )
+    sut = ZombieDieGame(
+        players=[
+            Player(name="Player", total_brains=15),
+            turn_player,
+            Player(name="Tres", total_brains=12),
+        ],
+        round=RoundState(
+            bag=DieBag.standard_bag(),
+            player=turn_player,
+            ended=True,
+        ),
+        current_player=2,
+        first_winning_player=0,
+    )
+
+    sut.check_for_game_over()
+
+    assert sut.game_over
+
+
+def test_zombie_die_game__when_determining_game_over_and_first_player_won_and_last_players_turn_still_going__does_not_end_game():
+    turn_player = Player(
+        name="Two",
+        total_brains=11,
+    )
+    sut = ZombieDieGame(
+        players=[
+            Player(name="Player", total_brains=15),
+            turn_player,
+            Player(name="Tres", total_brains=12),
+        ],
+        round=RoundState(
+            bag=DieBag.standard_bag(),
+            player=turn_player,
+            ended=False,
+        ),
+        current_player=2,
+        first_winning_player=0,
+    )
+
+    sut.check_for_game_over()
+
+    assert not sut.game_over
+
+
+def test_zombie_die_game__when_determining_game_over_and_next_turn_player_was_the_first_winner_and_current_turn_over__ends_game():
+    turn_player = Player(
+        name="Two",
+        total_brains=11,
+    )
+    sut = ZombieDieGame(
+        players=[
+            Player(name="Player", total_brains=15),
+            turn_player,
+            Player(name="Tres", total_brains=12),
+        ],
+        round=RoundState(
+            bag=DieBag.standard_bag(),
+            player=turn_player,
+            ended=True,
+        ),
+        current_player=1,
+        first_winning_player=2,
+    )
+
+    sut.check_for_game_over()
+
+    assert sut.game_over
+
+
+def test_zombie_die_game__when_determining_game_over_for_single_player_game__ends_game():
+    turn_player = Player(
+        name="Two",
+        total_brains=15,
+    )
+    sut = ZombieDieGame(
+        players=[
+            turn_player,
+        ],
+        round=RoundState(
+            bag=DieBag.standard_bag(),
+            player=turn_player,
+            ended=True,
+        ),
+        current_player=0,
+        first_winning_player=None,
+    )
+
+    sut.check_for_game_over()
+
+    assert sut.game_over
+
+
+def test_zombie_die_game__when_determining_game_over_for_two_player_game__ends_game():
+    turn_player = Player(
+        name="Two",
+        total_brains=15,
+    )
+    sut = ZombieDieGame(
+        players=[
+            turn_player,
+            Player(name="Uno", total_brains=14),
+        ],
+        round=RoundState(
+            bag=DieBag.standard_bag(),
+            player=turn_player,
+            ended=True,
+        ),
+        current_player=0,
+        first_winning_player=1,
+    )
+
+    sut.check_for_game_over()
+
+    assert sut.game_over
+
+
+def test_zombie_die_game__when_determining_game_over_for_two_player_game_last_player_finishes__ends_game():
+    turn_player = Player(
+        name="Two",
+        total_brains=15,
+    )
+    sut = ZombieDieGame(
+        players=[
+            Player(name="Uno", total_brains=14),
+            turn_player,
+        ],
+        round=RoundState(
+            bag=DieBag.standard_bag(),
+            player=turn_player,
+            ended=True,
+        ),
+        current_player=1,
+        first_winning_player=0,
+    )
+
+    sut.check_for_game_over()
+
+    assert sut.game_over
+
+
+def test_zombie_die_game__when_resolving_winner__selects_player_with_highest_brain_count():
+    turn_player = Player(
+        name="Two",
+        total_brains=15,
+    )
+    sut = ZombieDieGame(
+        players=[
+            Player(name="Uno", total_brains=14),
+            turn_player,
+            Player(
+                name="Winner",
+                total_brains=22,
+            ),
+        ],
+        round=RoundState(
+            bag=DieBag.standard_bag(),
+            player=turn_player,
+            ended=True,
+        ),
+        current_player=1,
+        first_winning_player=0,
+    )
+
+    assert sut.winner.name == "Winner"
+
+
 def all_face_bag(
     face: Face | None = None,
     amount_in_bag: int = 12,
