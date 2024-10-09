@@ -226,6 +226,9 @@ class ZombieDieGame:
         game_over: bool = False,
         round: RoundState | None = None,
     ) -> None:
+        if len(players) == 0:
+            raise ValueError("Not enough players for the game we need at least one.")
+
         self.commands = list(commands) if commands else []
         self.players = [
             (
@@ -243,8 +246,8 @@ class ZombieDieGame:
         self.first_winning_player = first_winning_player
         self.game_over = game_over
 
-        if len(self.players) == 0:
-            raise ValueError("Not enough players for the game we need at least one.")
+        if self.round is None and self.current_player is None:
+            self.next_round()
 
     @property
     def winner(self):
@@ -256,8 +259,8 @@ class ZombieDieGame:
 
     def reset_game(self):
         self.reset_players()
-        self.round = None
         self.commands = []
+        self.next_round()
 
     def next_round(self):
         if self.current_player is not None and self.round:
@@ -308,14 +311,12 @@ class ZombieDieGame:
         if self.game_over:
             raise ValueError("Cannot command an ended game please reset game.")
 
-        if self.round is None or self.round.ended:
-            self.next_round()
-
         self.commands.append((command, self.round))
 
-        self.round = command.execute(self.round)
-
+        resulting_round = command.execute(self.round)
+        self.round = resulting_round
         if self.round.ended:
             self.update_player()
-
-        self.check_for_game_over()
+            self.check_for_game_over()
+            self.next_round()
+        return resulting_round
