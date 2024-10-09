@@ -392,6 +392,68 @@ def test_draw_dice__when_creating_command_with_zero__raises_exception():
         DrawDice(amount_drawn=0)
 
 
+def test_draw_dice__when_rolled_death_for_player__round_is_ended_and_players_hand_is_cleared():
+    sut = DrawDice()
+    # Damn he is about to throw so hard...
+    round = RoundState(
+        bag=all_face_bag(Face.SHOTGUN, amount_in_bag=4),
+        player=Player(
+            name="Billy",
+            hand=[
+                create_die(Face.BRAIN),
+                create_die(Face.BRAIN),
+                create_die(Face.BRAIN),
+            ],
+        ),
+        ended=False,
+    )
+
+    new_round = sut.execute(round)
+
+    assert new_round.player.hand == []
+    assert new_round.ended is True
+
+
+def test_draw_dice__when_rolling_dice__uses_dice_in_hand_first():
+    round = RoundState(
+        bag=all_face_bag(Face.BRAIN, amount_in_bag=10),
+        player=Player(
+            name="OuiOui Bagguette",
+            hand=[
+                create_die(Face.FOOT),
+                create_die(Face.FOOT),
+                create_die(Face.FOOT),
+            ],
+        ),
+        ended=False,
+    )
+    sut = DrawDice()
+
+    new_round = sut.execute(round)
+
+    assert new_round.bag.drawn_dice == []
+    assert len(new_round.bag) == 10
+
+
+def test_draw_dice__when_rolling_dice_with_feet_in_hand__fills_in_remaining_with_die_from_bag():
+    round = RoundState(
+        bag=all_face_bag(Face.BRAIN, amount_in_bag=10),
+        player=Player(
+            name="OuiOui Bagguette",
+            hand=[
+                create_die(Face.FOOT),
+            ],
+        ),
+        ended=False,
+    )
+    sut = DrawDice()
+
+    new_round = sut.execute(round)
+
+    assert len(new_round.bag.drawn_dice) == 2
+    assert len(new_round.bag) == 8
+
+
 def test_score__when_scoring__calculates_based_on_players_hand():
     sut = Score()
     player = Player(name="Billy the Goat")

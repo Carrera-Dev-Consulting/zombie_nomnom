@@ -160,7 +160,6 @@ class DrawDice(Command):
 
         ended = player.is_player_dead()
         if ended:
-            # TODO(Milo): Add test case to make sure this works.
             player = player.clear_hand()
 
         return RoundState(
