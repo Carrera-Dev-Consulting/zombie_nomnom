@@ -82,6 +82,22 @@ def test_player_score__when_adding_dice__keeps_dice_in_hand():
     assert len(sut.hand) == 4
 
 
+def test_player_score__when_scoring__counts_all_brains():
+    sut = PlayerScore(
+        name="Medical",
+        hand=[
+            create_die(Face.BRAIN),
+            create_die(Face.FOOT),
+            create_die(Face.SHOTGUN),
+        ],
+        total_brains=0,
+    )
+
+    scored = sut.calculate_score()
+
+    assert scored.total_brains == 1
+
+
 def create_die(selected_face: Face | None = None):
     return Die(
         faces=[selected_face or Face.SHOTGUN] * 6,
