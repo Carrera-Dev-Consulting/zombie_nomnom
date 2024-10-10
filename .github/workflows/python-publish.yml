@@ -46,6 +46,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
       - uses: peter-evans/create-pull-request@v7
         with:
+          base: main
           commit-message: Updating the CHANGELOG.md
           draft: true
           labels: automated,docs
