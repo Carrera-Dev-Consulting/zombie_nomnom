@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.3.1-main.8.6ff8a92](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/tree/0.3.1-main.8.6ff8a92) (2024-10-10)
+
+[Full Changelog](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/compare/0.3.1-main.7.34fa80d...0.3.1-main.8.6ff8a92)
+
+**Merged pull requests:**
+
+- chore\(changelog\): Updating Changelog for version 0.3.1-main.7.34fa80d [\#47](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/pull/47) ([github-actions[bot]](https://github.com/apps/github-actions))
+
 ## [0.3.1-main.7.34fa80d](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/tree/0.3.1-main.7.34fa80d) (2024-10-10)
 
 [Full Changelog](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/compare/0.3.1-main.6.ef20356...0.3.1-main.7.34fa80d)
