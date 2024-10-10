@@ -51,31 +51,64 @@ import random
 
 class Face(str, Enum):
     """
-    Faces defined in the zombie_dice game:
-    - BRAIN
-        - The possible point face in the game.
-    - FOOT
-        - The neutral dice that you will be able to reroll to score more.
-    - SHOTGUN
-        - The negative counter of which when you get three you will lose out on all possible points per turn.
+    Face of the die for the game.
+
+    There are three core ones:
+    - BRAIN: Single point scoring face
+    - FOOT: Neutral dice that will be re-rolled first before any other die are given.
+    - SHOTGUN: Damaging dice where you are limited to only so many before your turn is over.
     """
 
     BRAIN = "BRAIN"
+    """Scoring `Face` worth a single point.
+    """
     FOOT = "FOOT"
+    """Neutral `Face` that we will reroll.
+    """
     SHOTGUN = "SHOTGUN"
+    """Damaging `Face` that may end the turn.
+    """
 
 
 class DieColor(str, Enum):
+    """
+    Names of special core dice in the game.
+    There are only three to begin with: RED, YELLOW, GREEN
+    """
+
     RED = "RED"
+    """The hardest die to score on in the game with only a single side.
+    """
     YELLOW = "YELLOW"
+    """The most medium die to score on with an equal number of brain and shot sides.
+    """
     GREEN = "GREEN"
+    """The most forgiving dice with only a single side that will damage you.
+    """
 
 
+# TODO(Milo): Update this for custom exception on invalid dice.
 class Die(BaseModel):
+    """
+    Represents the die we are rolling in the game.
+    This is currently enforced to only support 6 sided dice.
+    """
+
     faces: list[Face] = Field(min_length=6, max_length=6)
+    """
+    faces of the dice. It is currently only allowed to have 6 values.
+    """
     current_face: Face | None = None
+    """
+    The currently displayed face of the die. Defaults to None.
+    """
 
     def roll(self) -> Face:
+        """Rolls the dice using the `builtins.random` and updates the current_face field.
+
+        **Returns**
+        - `Face`: The face that the die is now on.
+        """
         self.current_face = random.choice(self.faces)
         return self.current_face
 
@@ -87,7 +120,20 @@ _dice_face_mapping = {
 }
 
 
+# TODO(Milo): Update this with custom exception for invalid dice.
 def create_die(color: DieColor) -> Die:
+    """Factory method to take in a `DieColor` and then create a die based on that.
+    Only supports the first three colors defined: `DieColor.RED`, `DieColor.YELLOW`, `DieColor.GREEN`.
+
+    **Parameters**
+    - color (`DieColor`): The color of the dice you want the factory to produce.
+
+    `Raises`:
+    - `ValueError`: When we are unable to resolve the color to a known recipe.
+
+    `Returns`
+    - `Die`: The dice defined by the color given.
+    """
     if color not in _dice_face_mapping:
         raise ValueError(f"Unknown Die Color: {color}")
 
