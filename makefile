@@ -13,7 +13,7 @@ docs:
 .PHONY: build-docs
 build-docs:
 	make cov-all
-	pdoc ./zombie_nomnom -o ./docs 
+	pdoc ./zombie_nomnom -o ./docs
 .PHONY: cov-all
 cov-all:
 	pytest tests --cov=zombie_nomnom --cov-report=html:docs/coverage --html=docs/coverage/report.html
