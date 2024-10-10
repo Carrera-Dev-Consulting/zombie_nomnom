@@ -38,10 +38,10 @@ game = ZombieDieGame(players=["Player One", "Player Two])
 
 logger.info(game.round)
 
-result = game.handle_command(draw_three)
+result = game.process_command(draw_three)
 logger.info(result)
 
-result = game.handle_command(score_hand)
+result = game.process_command(score_hand)
 logger.info(result)
 
 loger.info(game.round)
