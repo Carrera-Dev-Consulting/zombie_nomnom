@@ -26,9 +26,40 @@ We require at least python 3.10 to be able to run properly.
 Usage
 ---
 
-```python
-from zombie_nomnom import bag
+You can use the zombie_nomnom engine directly in code like this:
 
+```python
+...
+from zombie_nomnom import ZombieDieGame, DrawDice, Score
+
+draw_three = DrawDice(3)
+score_hand = Score()
+game = ZombieDieGame(players=["Player One", "Player Two])
+
+logger.info(game.round)
+
+result = game.handle_command(draw_three)
+logger.info(result)
+
+result = game.handle_command(score_hand)
+logger.info(result)
+
+loger.info(game.round)
+# ... keep playing game below
+```
+
+Or you can play it using the CLI that is already baked into the package:
+
+```bash
+> zombie-nomnom cli
+Enter Player Name: Jeffery
+Add Another Player? [y/N]: 
+Players: Jeffery (0)
+Currently Playing Jeffery, Hand: Brains(0), Feet(0), Shots(0), Dice Remaining: 13
+0) Exit
+1) Draw dice
+2) Score hand
+Select Item (0-2): 1
 ```
 
 Contribution
