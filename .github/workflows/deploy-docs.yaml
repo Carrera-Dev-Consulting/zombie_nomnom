@@ -82,6 +82,7 @@ jobs:
         uses: codacy/git-version@2.7.1
       - uses: ncipollo/release-action@v1
         with:
+          skipIfReleaseExists: true
           prerelease: true
           generateReleaseNotes: true
           tag: ${{ steps.version.outputs.version }}
