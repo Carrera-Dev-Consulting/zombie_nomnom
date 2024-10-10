@@ -92,6 +92,7 @@ jobs:
         id: changelog
         uses: heinrichreimer/action-github-changelog-generator@v2.4
         with:
+          exclude-tags: '^(\d+.){2}\d+-main.+$'
           token: ${{ secrets.GITHUB_TOKEN }}
       - uses: peter-evans/create-pull-request@v7
         with:
