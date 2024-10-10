@@ -71,7 +71,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      pull-requests: write
     steps:
       - uses: actions/checkout@v4
         with:
@@ -87,18 +86,3 @@ jobs:
           generateReleaseNotes: true
           tag: ${{ steps.version.outputs.version }}
           body: ${{ steps.changelog.outputs.changelog }}
-      
-      - name: "✏️ Generate release changelog"
-        id: changelog
-        uses: heinrichreimer/action-github-changelog-generator@v2.4
-        with:
-          exclude-tags: '^(\d+.){2}\d+-main.+$'
-          token: ${{ secrets.GITHUB_TOKEN }}
-      - uses: peter-evans/create-pull-request@v7
-        with:
-          commit-message: Saving Automatic Release Notes.
-          draft: true
-          labels: automated,docs
-          branch: ${{ steps.version.outputs.version }}-release-notes
-          title: 'chore(changelog): Updating Changelog for version ${{ steps.version.outputs.version }}'
-          
