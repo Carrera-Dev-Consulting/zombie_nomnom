@@ -66,3 +66,36 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+  release:
+    needs: deploy
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+      - name: Git Version
+        id: version
+        uses: codacy/git-version@2.7.1
+      - uses: ncipollo/release-action@v1
+        with:
+          prerelease: true
+          generateReleaseNotes: true
+          tag: ${{ steps.version.outputs.version }}
+          body: ${{ steps.changelog.outputs.changelog }}
+      
+      - name: "✏️ Generate release changelog"
+        id: changelog
+        uses: heinrichreimer/action-github-changelog-generator@v2.3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: peter-evans/create-pull-request@v7
+        with:
+          commit-message: Saving Automatic Release Notes.
+          draft: true
+          labels: automated,docs
+          branch: ${{ steps.version.outputs.version }}-release-notes
+          title: 'chore(changelog): Updating Changelog for version ${{ steps.version.outputs.version }}'
+          
