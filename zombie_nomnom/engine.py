@@ -366,13 +366,21 @@ class ZombieDieGame:
     """
 
     players: list[Player]
+    """Players that are in the game."""
     commands: list[tuple[Command, RoundState]]
+    """Commands that have been processed in the game and the round state they were in before it started."""
     bag_function: Callable[[], DieBag]
+    """Function that we use when we need to create a new bag for a round."""
     round: RoundState | None
+    """Current round that we are on."""
     current_player: int | None
+    """Index of player in the players array who's turn it currently is."""
     first_winning_player: int | None
+    """Index of player who first exceeded or matched the `score_threshold`."""
     game_over: bool
+    """Marker for when the game is over."""
     score_threshold: int
+    """Threshold required for a player to start the end game."""
 
     def __init__(
         self,
