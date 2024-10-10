@@ -1,3 +1,53 @@
+"""Module that contains the code to run the core game engine.
+You can create an instance directly by using the `ZombieDieGame`.
+
+```python
+from zombie_nomnom import ZombieDieGame, DrawDice, Score
+
+score = Score()
+draw_dice = DrawDice(3)
+
+game = ZombieDieGame(players=["Mellow"])
+
+game.process_command(draw_dice)
+game.process_command(score)
+
+```
+
+For the core of the engine it doesn't actually know how to play but only 
+how to manage a turn based on tracking the changes in a round with a `RoundState` object.
+
+This allows you to extend the game by creating your own custom actions with the `Command` class.
+This class defines the `execute` method and then allows you to specify what that action does to the game state.
+You will need to return an new instance of `RoundState` objects that represents the effect of game state after the round is over.
+
+```python
+from zombie_nomnom import Command, ZombieDieGame
+
+class CustomCommand(Command):
+    def execute(self, round: RoundState) -> RoundState:
+        # do meaningful work to define what you want this command to do to the round.
+        return round  # return either a new command or the exact same command unchanged.
+
+custom_command = CustomCommand()
+game = ZombieDieGame(players=["Meelow"])
+
+game.process_command(custom_command) # now it just works in the game!!
+
+```
+
+This only allows you to modify the state of the current player or the current turn that is active in the engine.
+That being said it should provide a nice way to extend the app with custom actions for a players.
+
+The core objects that we use in our engine are three:
+- `Player`
+- `RoundState`
+
+```python
+```
+
+"""
+
 from abc import ABC, abstractmethod
 import operator
 from typing import Callable
