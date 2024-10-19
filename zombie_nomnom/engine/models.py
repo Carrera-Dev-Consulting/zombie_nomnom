@@ -138,3 +138,14 @@ class RoundState(BaseModel):
     """Player that is currently playing"""
     ended: bool = False
     """Records whether or not the current round is over"""
+
+
+class DieRecipe(BaseModel):
+    """The recipe for a dice to be used in the bag. Will have the array of faces
+    that we will use for our die and how many instances to add to our bag.
+    """
+
+    faces: list[Face]
+    """The faces that will make up the dice."""
+    amount: int
+    """The amount of dice that will be added to the bag."""

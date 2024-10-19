@@ -1,10 +1,43 @@
+from copy import deepcopy
 import operator
 from typing import Callable
 
 from zombie_nomnom.models import DieBag
+from zombie_nomnom.models.dice import Die
 
-from .models import Player, RoundState
+from .models import DieRecipe, Player, RoundState
 from .commands import Command
+
+
+def bag_from_recipes(dice_recipes: list[DieRecipe]):
+    """Function that can be used to create a bag_function from a list of dice recipes.
+
+    **Parameters**
+    - dice_recipes (`list[DieRecipe]`): the list of recipes to create the dice in the bag.
+
+    **Returns**
+    - `Callable[[], DieBag]`: The new closure that creates bags by referencing the dice_recipes array.
+
+    **Raises**
+    - `ValueError`: When give no recipes. Must have recipes to be able to create a bag that is non-empty.
+    """
+    if not dice_recipes:
+        raise ValueError("Need recipes to build bag from.")
+
+    def _bag_function():
+        dice = []
+        for recipe in dice_recipes:
+            dice.extend(
+                Die(
+                    faces=deepcopy(recipe.faces),
+                )
+                for _ in range(recipe.amount)
+            )
+        return DieBag(
+            dice=dice,
+        )
+
+    return _bag_function
 
 
 class ZombieDieGame:
@@ -40,6 +73,7 @@ class ZombieDieGame:
     """Marker for when the game is over."""
     score_threshold: int
     """Threshold required for a player to start the end game."""
+    bag_recipes: list[DieRecipe]
 
     def __init__(
         self,
@@ -51,6 +85,7 @@ class ZombieDieGame:
         first_winning_player: int | None = None,
         game_over: bool = False,
         round: RoundState | None = None,
+        bag_recipes: list[DieRecipe] | None = None,
     ) -> None:
         if len(players) == 0:
             raise ValueError("Not enough players for the game we need at least one.")
@@ -64,7 +99,12 @@ class ZombieDieGame:
             )
             for name_or_score in players
         ]
-        self.bag_function = bag_function or DieBag.standard_bag
+        if not bag_recipes:
+            self.bag_function = bag_function or DieBag.standard_bag
+            self.bag_recipes = []
+        else:
+            self.bag_function = bag_from_recipes(bag_recipes)
+            self.bag_recipes = bag_recipes
         self.score_threshold = score_threshold
 
         self.round = round
