@@ -2,7 +2,7 @@
 name: Documentation request
 about: Ask for something to be added to documentation
 title: "[DOC]"
-labels: documentation
+labels: docs
 assignees: ''
 
 ---
