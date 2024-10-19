@@ -2,6 +2,7 @@ from copy import deepcopy
 import operator
 from typing import Callable
 
+
 from zombie_nomnom.models import DieBag
 from zombie_nomnom.models.dice import Die
 
@@ -52,6 +53,7 @@ class ZombieDieGame:
     - first_winning_player (`int | None` optional): the index in the player array that represents the first player to meet or exceed the score threshold. Defaults to `None`
     - game_over (`bool`, optional): marks whether or not game is over. Defaults to `False`
     - round (`RoundState | None`, optional): the current round of the game being played. Defaults to a new instance that is created for the first player in the player array.
+    - bag_recipes (`list[DieRecipe]`):
 
     **Raises**
     - `ValueError`: When there is not enough players to play a game.
