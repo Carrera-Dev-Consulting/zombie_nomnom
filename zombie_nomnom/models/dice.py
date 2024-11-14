@@ -93,6 +93,7 @@ class Die(BaseModel):
     Represents the die we are rolling in the game.
     This is currently enforced to only support 6 sided dice.
     """
+
     name: str | None = None
     """
         The plaintext name of the die.
