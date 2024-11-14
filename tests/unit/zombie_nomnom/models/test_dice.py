@@ -58,3 +58,16 @@ def test_create_die__when_given_invalid_color__raises_value_error():
 def test_create_die__when_given_valid_color__returns_expected_die(color, sides):
     sut = create_die(color)
     assert sut.faces == sides
+
+@pytest.mark.parametrize(
+    "color, name",
+    [
+        (DieColor.GREEN, "GREEN"),
+        (DieColor.YELLOW, "YELLOW"),
+        (DieColor.RED, "RED"),
+    ],
+)
+
+def test_create_die__when_given_red__returns_die_named_color(color, name):
+    die = create_die(color)
+    assert die.name == name
