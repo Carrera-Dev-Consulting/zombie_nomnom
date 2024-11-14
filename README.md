@@ -11,8 +11,8 @@
 | zombie\_nomnom/engine.py              |      161 |        0 |     100% |           |
 | zombie\_nomnom/models/\_\_init\_\_.py |        3 |        0 |     100% |           |
 | zombie\_nomnom/models/bag.py          |       33 |        0 |     100% |           |
-| zombie\_nomnom/models/dice.py         |       34 |        0 |     100% |           |
-|                             **TOTAL** |  **313** |    **0** | **100%** |           |
+| zombie\_nomnom/models/dice.py         |       36 |        0 |     100% |           |
+|                             **TOTAL** |  **315** |    **0** | **100%** |           |
 
 
 ## Setup coverage badge
