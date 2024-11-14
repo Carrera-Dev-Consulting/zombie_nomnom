@@ -45,5 +45,5 @@ Changelog = "https://github.com/carrera-dev-consulting/zombie_nomnom/releases"
 zombie-nomnom = "zombie_nomnom.app:main"
 
 [tool.pdm]
-version = { source = "scm" }
+version = { source = "scm", tag_regex = "^(\\d+\\.){2}\\d+$" }
 distribution = true
