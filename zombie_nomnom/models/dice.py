@@ -94,6 +94,10 @@ class Die(BaseModel):
     This is currently enforced to only support 6 sided dice.
     """
 
+    name: str | None = None
+    """
+        The plaintext name of the die.
+    """
     faces: list[Face] = Field(min_length=6, max_length=6)
     """
     faces of the dice. It is currently only allowed to have 6 values.
@@ -141,4 +145,4 @@ def create_die(color: DieColor) -> Die:
     faces = []
     for face, amount in mapped_color.items():
         faces.extend([face] * amount)
-    return Die(faces=faces)
+    return Die(faces=faces, name=color)
