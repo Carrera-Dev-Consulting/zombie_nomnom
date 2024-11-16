@@ -11,12 +11,11 @@ name: Upload Python Package
 on:
   release:
     types: [published]
-
 permissions:
   contents: read
 
 jobs:
-  deploy:
+  publish-pypi:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -33,6 +32,8 @@ jobs:
           pip install build
       - name: Build package
         run: python -m build
+        env:
+          PDM_BUILD_SCM_VERSION: ${{ github.event.release.tag_name }}
       - name: Publish package
         uses: pypa/gh-action-pypi-publish@27b31702a0e7fc50959f5ad993c78deac1bdfc29
         with:
@@ -40,9 +41,9 @@ jobs:
           password: ${{ secrets.PYPI_API_TOKEN }}
       - name: "✏️ Generate release changelog"
         id: changelog
-        uses: heinrichreimer/action-github-changelog-generator@v2.4
+        uses: janheinrichmerker/action-github-changelog-generator@v2.3
         with:
-          exclude-tags: '^(\d+.){2}\d+-main.+$'
+          excludeTagsRegex: '^(\d+.){2}\d+-main.+$'
           token: ${{ secrets.GITHUB_TOKEN }}
       - uses: peter-evans/create-pull-request@v7
         with:
