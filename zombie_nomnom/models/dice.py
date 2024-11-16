@@ -45,7 +45,7 @@ and use different dice as you make your own custom games.
 """
 
 from enum import Enum
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 import random
 
 
@@ -68,6 +68,19 @@ class Face(str, Enum):
     SHOTGUN = "SHOTGUN"
     """Damaging `Face` that may end the turn.
     """
+
+
+class DieFace(BaseModel):
+    """
+    Represents a custom face on a die. Used to allow us to be able to score extra points or damage on a player when drawn.
+    """
+
+    name: str
+    """Name of the face."""
+    score: int
+    """Amount of points a player will gain from face."""
+    damage: int
+    """Amount of damage a player will take from face."""
 
 
 class DieColor(str, Enum):
@@ -98,11 +111,11 @@ class Die(BaseModel):
     """
         The plaintext name of the die.
     """
-    faces: list[Face] = Field(min_length=6, max_length=6)
+    faces: list[DieFace | Face] = Field(min_length=6, max_length=6)
     """
     faces of the dice. It is currently only allowed to have 6 values.
     """
-    current_face: Face | None = None
+    current_face: Face | DieFace | None = None
     """
     The currently displayed face of the die. Defaults to None.
     """

@@ -1,6 +1,6 @@
 import pytest
 from zombie_nomnom.models.bag import DieBag
-from zombie_nomnom.models.dice import Die, Face
+from zombie_nomnom.models.dice import Die, Face, DieFace
 from zombie_nomnom.engine import (
     DrawDice,
     Player,
@@ -130,7 +130,19 @@ def test_player_score__when_scoring_hand_with_existing_points__adds_points_toget
     assert scored.total_brains == 12
 
 
-def create_die(selected_face: Face | None = None):
+def test_players_score__when_scoring_with_custom_face__adds_all_score_per_face():
+    sut = Player(
+        name="Medici",
+        hand=[
+            create_die(Face.BRAIN),
+            create_die(DieFace(name="Super Brains", score=13, damage=0)),
+        ],
+        total_brains=0,
+    )
+    assert sut.calculate_score().total_brains == 14
+
+
+def create_die(selected_face: Face | DieFace | None = None):
     return Die(
         faces=[selected_face or Face.SHOTGUN] * 6,
         current_face=selected_face,
@@ -160,6 +172,19 @@ def test_player_score__when_hand_has_two_shotguns__player_is_alive():
     )
 
     assert not sut.is_player_dead(), "He isn't alive bobby"
+
+
+def test_player_score__when_player_draws_instakill__player_is_dead():
+    sut = Player(
+        name="death",
+        hand=[
+            create_die(DieFace(name="instakill", score=0, damage=3)),
+            create_die(Face.BRAIN),
+            create_die(Face.BRAIN),
+            create_die(Face.BRAIN),
+        ],
+    )
+    assert sut.is_player_dead(), "He isn't dead bobby"
 
 
 def test_zombie_die_game__when_creating_game_with_no_players__raises_exception():

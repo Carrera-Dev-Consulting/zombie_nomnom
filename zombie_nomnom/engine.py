@@ -96,6 +96,7 @@ from pydantic import BaseModel, Field
 
 from zombie_nomnom.models.dice import Die, Face
 from .models.bag import DieBag
+from .models.dice import DieFace
 from pydantic import validate_call
 
 
@@ -106,6 +107,34 @@ def uuid_str() -> str:
     - `str`: stringified uuid
     """
     return str(uuid.uuid4())
+
+
+def is_scoring_face(face: Face | DieFace) -> bool:
+    return (
+        isinstance(face, Face)
+        and face == Face.BRAIN
+        or isinstance(face, DieFace)
+        and face.score
+    )
+
+
+def is_damaging_face(face: Face | DieFace) -> bool:
+    return (
+        isinstance(face, Face)
+        and face == Face.SHOTGUN
+        or isinstance(face, DieFace)
+        and face.damage
+    )
+
+
+def is_blank_face(face: Face | DieFace) -> bool:
+    return (
+        isinstance(face, Face)
+        and face == Face.FOOT
+        or isinstance(face, DieFace)
+        and not face.score
+        and not face.damage
+    )
 
 
 class Player(BaseModel):
@@ -131,7 +160,7 @@ class Player(BaseModel):
         **Returns**:
         - `list[zombie_nomnom.Die]`: re-rollable dice
         """
-        return [die for die in self.hand if die.current_face == Face.FOOT]
+        return [die for die in self.hand if is_blank_face(die.current_face)]
 
     @property
     def brains(self) -> list[Die]:
@@ -140,7 +169,7 @@ class Player(BaseModel):
         **Returns**
         - `list[zombie_nomnom.Die]`: scoreable dice
         """
-        return [die for die in self.hand if die.current_face == Face.BRAIN]
+        return [die for die in self.hand if is_scoring_face(die.current_face)]
 
     @property
     def shots(self) -> list[Die]:
@@ -149,7 +178,7 @@ class Player(BaseModel):
         **Returns**
         - `list[zombie_nomnom.Die]`: damaging dice
         """
-        return [die for die in self.hand if die.current_face == Face.SHOTGUN]
+        return [die for die in self.hand if is_damaging_face(die.current_face)]
 
     def is_player_dead(self) -> bool:
         """Calculates whether or not the player should be dead based on the shots in their hand.
@@ -158,9 +187,12 @@ class Player(BaseModel):
         - bool: True when player is considered dead.
         """
         total = 0
-        for _ in self.shots:
-            # TODO(Milo): Later refactor to look at the die and then add whatever number is on these die.
-            total += 1
+        for shot in self.shots:
+            face = shot.current_face
+            if isinstance(face, DieFace):
+                total += face.damage
+            else:
+                total += 1
         # if you have 3 shots you are dead XP
         return total >= 3
 
@@ -209,9 +241,12 @@ class Player(BaseModel):
         - `Player`: New player instance with score adjusted for scoring dice in hand and hand reset back to empty list.
         """
         additional_score = 0
-        for _ in self.brains:
-            # TODO (Milo): For future update where will allow other dice to score a variable amount of points.
-            additional_score += 1
+        for brain_xo in self.brains:
+            face = brain_xo.current_face
+            if isinstance(face, DieFace):
+                additional_score += face.score
+            else:
+                additional_score += 1
         return Player(
             id=self.id,
             name=self.name,
