@@ -1,60 +1,40 @@
 # Changelog
 
+## [1.0.1](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/tree/1.0.1) (2024-11-16)
+
+[Full Changelog](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/compare/1.0.0...1.0.1)
+
+**Closed issues:**
+
+- \[FEAT\] Allow me to label the dice on the library so I can identify them thanks 😄  [\#24](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/issues/24)
+
+**Merged pull requests:**
+
+- build\(pypi\): Fix the issue to deploy to pypi by hard setting version. [\#59](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/pull/59) ([gxldCptRick](https://github.com/gxldCptRick))
+
+## [1.0.0](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/tree/1.0.0) (2024-11-14)
+
+[Full Changelog](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/compare/0.3.2...1.0.0)
+
+**Closed issues:**
+
+- \[INFRA\] Fix Bandit [\#51](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/issues/51)
+
+**Merged pull requests:**
+
+- feat: adding name field [\#58](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/pull/58) ([brokensongfallen](https://github.com/brokensongfallen))
+- chore\(versioning\): Fixing version to lookup valid versions. [\#57](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/pull/57) ([gxldCptRick](https://github.com/gxldCptRick))
+- chore\(issues\): Update issue template labels. [\#56](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/pull/56) ([gxldCptRick](https://github.com/gxldCptRick))
+- chore\(security\): Update github action for bandit to use more updated version. [\#52](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/pull/52) ([gxldCptRick](https://github.com/gxldCptRick))
+- chore\(changelog\): Updating Changelog for version 0.3.2 [\#50](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/pull/50) ([github-actions[bot]](https://github.com/apps/github-actions))
+
 ## [0.3.2](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/tree/0.3.2) (2024-10-10)
 
-[Full Changelog](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/compare/0.3.2-main.1.31fbe17...0.3.2)
-
-## [0.3.2-main.1.31fbe17](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/tree/0.3.2-main.1.31fbe17) (2024-10-10)
-
-[Full Changelog](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/compare/0.3.1-main.9.44cbd74...0.3.2-main.1.31fbe17)
-
-## [0.3.1-main.9.44cbd74](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/tree/0.3.1-main.9.44cbd74) (2024-10-10)
-
-[Full Changelog](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/compare/0.3.1...0.3.1-main.9.44cbd74)
+[Full Changelog](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/compare/0.3.1...0.3.2)
 
 ## [0.3.1](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/tree/0.3.1) (2024-10-10)
 
-[Full Changelog](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/compare/0.3.1-main.8.6ff8a92...0.3.1)
-
-**Merged pull requests:**
-
-- chore\(changelog\): Changing how and when we create change log changes. [\#49](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/pull/49) ([gxldCptRick](https://github.com/gxldCptRick))
-
-## [0.3.1-main.8.6ff8a92](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/tree/0.3.1-main.8.6ff8a92) (2024-10-10)
-
-[Full Changelog](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/compare/0.3.1-main.7.34fa80d...0.3.1-main.8.6ff8a92)
-
-**Merged pull requests:**
-
-- chore\(changelog\): Updating Changelog for version 0.3.1-main.7.34fa80d [\#47](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/pull/47) ([github-actions[bot]](https://github.com/apps/github-actions))
-
-## [0.3.1-main.7.34fa80d](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/tree/0.3.1-main.7.34fa80d) (2024-10-10)
-
-[Full Changelog](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/compare/0.3.1-main.6.ef20356...0.3.1-main.7.34fa80d)
-
-**Merged pull requests:**
-
-- chore\(releases\): Adding param to skip releases so we can rerun the workflow on failures. [\#46](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/pull/46) ([gxldCptRick](https://github.com/gxldCptRick))
-
-## [0.3.1-main.6.ef20356](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/tree/0.3.1-main.6.ef20356) (2024-10-10)
-
-[Full Changelog](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/compare/0.3.1-main.5.4778fea...0.3.1-main.6.ef20356)
-
-**Merged pull requests:**
-
-- chore\(changelog\): Update changelog action version. [\#45](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/pull/45) ([gxldCptRick](https://github.com/gxldCptRick))
-
-## [0.3.1-main.5.4778fea](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/tree/0.3.1-main.5.4778fea) (2024-10-10)
-
-[Full Changelog](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/compare/0.3.1-main.4.aeacb23...0.3.1-main.5.4778fea)
-
-**Merged pull requests:**
-
-- chore\(changelog\): Giving releases actions enough permissions to open pr. [\#44](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/pull/44) ([gxldCptRick](https://github.com/gxldCptRick))
-
-## [0.3.1-main.4.aeacb23](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/tree/0.3.1-main.4.aeacb23) (2024-10-10)
-
-[Full Changelog](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/compare/0.3.0...0.3.1-main.4.aeacb23)
+[Full Changelog](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/compare/0.3.0...0.3.1)
 
 **Closed issues:**
 
@@ -66,6 +46,11 @@
 
 **Merged pull requests:**
 
+- chore\(changelog\): Changing how and when we create change log changes. [\#49](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/pull/49) ([gxldCptRick](https://github.com/gxldCptRick))
+- chore\(changelog\): Updating Changelog for version 0.3.1-main.7.34fa80d [\#47](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/pull/47) ([github-actions[bot]](https://github.com/apps/github-actions))
+- chore\(releases\): Adding param to skip releases so we can rerun the workflow on failures. [\#46](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/pull/46) ([gxldCptRick](https://github.com/gxldCptRick))
+- chore\(changelog\): Update changelog action version. [\#45](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/pull/45) ([gxldCptRick](https://github.com/gxldCptRick))
+- chore\(changelog\): Giving releases actions enough permissions to open pr. [\#44](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/pull/44) ([gxldCptRick](https://github.com/gxldCptRick))
 - chore\(changelog\): Adding Release steps to automate releases and create a CHANGELOG.md [\#43](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/pull/43) ([gxldCptRick](https://github.com/gxldCptRick))
 - docs\(\#16\): Adding Docs to the code. [\#40](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/pull/40) ([gxldCptRick](https://github.com/gxldCptRick))
 - chore\(\#38\): Adding PR Title Checker  [\#39](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/pull/39) ([gxldCptRick](https://github.com/gxldCptRick))
@@ -119,10 +104,6 @@
 ## [0.1.1](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/tree/0.1.1) (2024-10-04)
 
 [Full Changelog](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/compare/0.1.0...0.1.1)
-
-**Closed issues:**
-
-- Bruh [\#8](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/issues/8)
 
 **Merged pull requests:**
 
