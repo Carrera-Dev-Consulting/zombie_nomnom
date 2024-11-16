@@ -108,8 +108,14 @@ def uuid_str() -> str:
     """
     return str(uuid.uuid4())
 
+
 def is_scoring_face(face: Face | DieFace) -> bool:
-    return isinstance(face, Face) and face == Face.BRAIN or isinstance(face, DieFace) and face.score
+    return (
+        isinstance(face, Face)
+        and face == Face.BRAIN
+        or isinstance(face, DieFace)
+        and face.score
+    )
 
 
 def is_damaging_face(face: Face | DieFace) -> bool:
@@ -126,7 +132,7 @@ def is_blank_face(face: Face | DieFace) -> bool:
         isinstance(face, Face)
         and face == Face.FOOT
         or isinstance(face, DieFace)
-        and not face.score 
+        and not face.score
         and not face.damage
     )
 
@@ -154,7 +160,7 @@ class Player(BaseModel):
         **Returns**:
         - `list[zombie_nomnom.Die]`: re-rollable dice
         """
-        return [die for die in self.hand if  is_blank_face(die.current_face)]
+        return [die for die in self.hand if is_blank_face(die.current_face)]
 
     @property
     def brains(self) -> list[Die]:

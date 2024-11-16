@@ -72,8 +72,9 @@ class Face(str, Enum):
 
 class DieFace(BaseModel):
     """
-        Represents a custom face on a die. Used to allow us to be able to score extra points or damage on a player when drawn.
+    Represents a custom face on a die. Used to allow us to be able to score extra points or damage on a player when drawn.
     """
+
     name: str
     """Name of the face."""
     score: int
@@ -118,6 +119,7 @@ class Die(BaseModel):
     """
     The currently displayed face of the die. Defaults to None.
     """
+
     def roll(self) -> Face:
         """Rolls the dice using the `builtins.random` and updates the current_face field.
 
