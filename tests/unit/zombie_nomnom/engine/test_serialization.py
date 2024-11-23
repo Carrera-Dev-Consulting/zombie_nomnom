@@ -8,7 +8,6 @@ from zombie_nomnom.engine.serialization import (
     format_to_json_dict,
     parse_game_json_dict,
     ZombieDieGame,
-    ZombieDieGameDict,
     DieRecipe,
 )
 
@@ -105,13 +104,13 @@ def test_parse_game_json_dict__when_given_valid_dict__returns_game_instance(
     game,
 ):
     game_dict = format_to_json_dict(game)
-    result = parse_game_json_dict(game_dict)
+    sut = parse_game_json_dict(game_dict)
 
-    assert result
-    assert result.bag_recipes == game.bag_recipes
-    assert result.players == game.players
-    assert result.score_threshold == game.score_threshold
-    assert result.round == game.round
+    assert sut
+    assert sut.bag_recipes == game.bag_recipes
+    assert sut.players == game.players
+    assert sut.score_threshold == game.score_threshold
+    assert sut.round == game.round
 
 
 def test_parse_game_json_dict__when_bag_function_is_str_and_bag_function_is_not_standard_bag__raises_value_error(
