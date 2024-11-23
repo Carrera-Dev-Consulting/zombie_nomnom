@@ -16,6 +16,17 @@ def uuid_str() -> str:
 
 
 def is_scoring_face(face: Face | DieFace) -> bool:
+    """Checks if a face is scoring.
+
+    A scoring face is a face that will score points for the player.
+    This is useful for determining if a player should continue rolling or not.
+
+    **Arguments**
+    - `face: Face | DieFace`: The face to check.
+
+    **Returns**
+    - `bool`: If the face is a scoring face.
+    """
     return (
         isinstance(face, Face)
         and face == Face.BRAIN
@@ -25,6 +36,17 @@ def is_scoring_face(face: Face | DieFace) -> bool:
 
 
 def is_damaging_face(face: Face | DieFace) -> bool:
+    """Checks if a face is damaging.
+
+    A damaging face is a face that will limit the amount of dice the player can roll.
+    This is useful for determining if a player should stop rolling or not.
+
+    **Arguments**
+    - `face: Face | DieFace`: The face to check.
+
+    **Returns**
+    - `bool`: If the face is a damaging face.
+    """
     return (
         isinstance(face, Face)
         and face == Face.SHOTGUN
@@ -34,6 +56,17 @@ def is_damaging_face(face: Face | DieFace) -> bool:
 
 
 def is_blank_face(face: Face | DieFace) -> bool:
+    """Checks if a face is blank.
+
+    A blank face is a face that doesn't score any points nor does it damage the player.
+    This is useful for determining if a die should be rolled again.
+
+    **Arguments**
+    - `face: Face | DieFace`: The face to check.
+
+    **Returns**
+    - `bool`: True if the face is blank.
+    """
     return (
         isinstance(face, Face)
         and face == Face.FOOT
