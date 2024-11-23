@@ -141,7 +141,9 @@ UNTRANSFORMED_KEYS = {
 
 
 def parse_game_json_dict(game_data: ZombieDieGameDict) -> ZombieDieGame:
-    parameters = {key: value for key, value in game_data if key in UNTRANSFORMED_KEYS}
+    parameters = {
+        key: value for key, value in game_data.items() if key in UNTRANSFORMED_KEYS
+    }
     # ones we just need a simple model_validate_on
     parameters["commands"] = [
         (parse_command_dict(command), RoundState.model_validate(state))
