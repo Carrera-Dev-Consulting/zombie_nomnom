@@ -13,6 +13,14 @@ from zombie_nomnom.engine.serialization import (
 )
 
 
+@pytest.fixture
+def game():
+    zombie_game = ZombieDieGame(players=["Player Uno"])
+    zombie_game.bag_recipes = [DieRecipe(faces=[Face.FOOT] * 6, amount=3)]
+    zombie_game.bag_function = DrawDice(amount_drawn=3)
+    yield zombie_game
+
+
 def test_format_command__when_formatting_known_command__uses_fully_qualified_name_for_class():
     command = Score()
     expected = {
@@ -83,38 +91,34 @@ def test_format_to_json_dict__when_bag_function_is_none_and_bag_recipes_is_empty
         format_to_json_dict(game)
 
 
-def test_format_to_json_dict__when_bag_function_is_not_none_and_bag_recipes_exists__returns_valid_dict():
-    game = ZombieDieGame(players=["Player Uno"])
-    game.bag_recipes = [DieRecipe(faces=[Face.FOOT] * 6, amount=3)]
-    game.bag_function = DrawDice(amount_drawn=3)
+def test_format_to_json_dict__when_bag_function_is_not_none_and_bag_recipes_exists__returns_valid_dict(
+    game,
+):
+    sut = format_to_json_dict(game)
+    assert sut
+    assert isinstance(sut, dict)
+    assert sut["bag_function"]
+    assert sut["players"]
 
+
+def test_parse_game_json_dict__when_given_valid_dict__returns_game_instance(
+    game,
+):
     game_dict = format_to_json_dict(game)
-    assert game_dict
-    assert isinstance(game_dict, dict)
-    assert game_dict["bag_function"]
-    assert game_dict["players"]
-
-
-def test_parse_game_json_dict__when_given_valid_dict__returns_game_instance():
-    expected = ZombieDieGame(players=["Player Uno"])
-    expected.bag_recipes = [DieRecipe(faces=[Face.FOOT] * 6, amount=3)]
-    expected.bag_function = DrawDice(amount_drawn=3)
-    game_dict = format_to_json_dict(expected)
     result = parse_game_json_dict(game_dict)
 
     assert result
-    assert result.bag_recipes == expected.bag_recipes
-    assert result.players == expected.players
-    assert result.score_threshold == expected.score_threshold
-    assert result.round == expected.round
+    assert result.bag_recipes == game.bag_recipes
+    assert result.players == game.players
+    assert result.score_threshold == game.score_threshold
+    assert result.round == game.round
 
 
-def test_parse_game_json_dict__when_bag_function_is_str_and_bag_function_is_not_standard_bag__raises_value_error():
+def test_parse_game_json_dict__when_bag_function_is_str_and_bag_function_is_not_standard_bag__raises_value_error(
+    game,
+):
     with pytest.raises(ValueError):
-        expected = ZombieDieGame(players=["Player Uno"])
-        expected.bag_recipes = [DieRecipe(faces=[Face.FOOT] * 6, amount=3)]
-        expected.bag_function = "DrawDice"
-        game_dict = format_to_json_dict(expected)
+        game_dict = format_to_json_dict(game)
         game_dict["bag_function"] = "DrawDice"
 
         parse_game_json_dict(game_dict)
