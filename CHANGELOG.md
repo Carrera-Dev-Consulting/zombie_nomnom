@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.1.0](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/tree/1.1.0) (2024-11-24)
+
+[Full Changelog](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/compare/1.0.1...1.1.0)
+
+**Closed issues:**
+
+- \[FEAT\] Update Engine Code to be loadable from a json file. [\#27](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/issues/27)
+- \[FEAT\] Custom Faces [\#26](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/issues/26)
+
+**Merged pull requests:**
+
+- feat: custom faces edits [\#61](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/pull/61) ([brokensongfallen](https://github.com/brokensongfallen))
+- chore\(changelog\): Updating Changelog for version 1.0.1 [\#60](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/pull/60) ([github-actions[bot]](https://github.com/apps/github-actions))
+- feat\(core\): Adding the ability to load an instance of the game engine from a jsonfile or dict. [\#54](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/pull/54) ([gxldCptRick](https://github.com/gxldCptRick))
+
 ## [1.0.1](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/tree/1.0.1) (2024-11-16)
 
 [Full Changelog](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/compare/1.0.0...1.0.1)
