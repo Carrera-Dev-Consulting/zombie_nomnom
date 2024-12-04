@@ -229,3 +229,25 @@ y
     result = run_game_with_input(input_text)
     assert result.exit_code == 0
     assert "Overwrite existing file?" in result.output
+
+
+def test_app__when_saving_on_existing_file__does_not_overwrite(
+    run_game_with_input: Callable[[str], Result],
+    tmp_path: str,
+):
+    save_file_path = os.path.join(tmp_path, "test_save.json")
+    with open(save_file_path, "w") as fp:
+        json.dump(format_to_json_dict(ZombieDieGame(["Milo"])), fp)
+
+    input_text = f"""2
+{save_file_path}
+3
+1
+{save_file_path}
+n
+0
+"""
+
+    result = run_game_with_input(input_text)
+    assert result.exit_code == 0
+    assert "Overwrite existing file?" in result.output
