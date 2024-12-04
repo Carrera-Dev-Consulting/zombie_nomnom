@@ -109,10 +109,14 @@ def parse_command_dict(command: CommandDict) -> Command:
 
 
 def format_to_json_dict(game: ZombieDieGame) -> ZombieDieGameDict:
-    if game.bag_function is not DieBag.standard_bag and not game.bag_recipes:
-        raise ValueError(
-            "Unable to serialize custom coded bag function must either use built in standard_bag or use the bag_recipes pattern."
-        )
+    """Will default any game to be using the standard bag unless given a recipe to create dice.
+
+    **Parameters**
+    - game (`ZombieDieGame`): The game to serialize
+
+    **Returns**
+    - `ZombieDieGameDict`: The serialized game as a dict that is json serializable
+    """
     return {
         "players": [player.model_dump(mode="json") for player in game.players],
         "bag_function": (
