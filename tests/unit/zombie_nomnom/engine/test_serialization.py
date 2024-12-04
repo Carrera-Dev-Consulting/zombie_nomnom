@@ -84,10 +84,10 @@ def test_parse_command_dict__when_parsing_command_with_parameters_args__loads_co
     assert actual.amount_drawn == 3
 
 
-def test_format_to_json_dict__when_bag_function_is_none_and_bag_recipes_is_empty__raises_value_error():
-    with pytest.raises(ValueError):
-        game = ZombieDieGame(players=["Player Uno"])
-        format_to_json_dict(game)
+def test_format_to_json_dict__when_bag_function_is_none_and_bag_recipes_is_empty__assumes_standard_bag():
+    game = ZombieDieGame(players=["Player Uno"])
+    json = format_to_json_dict(game)
+    assert json["bag_function"] == "standard"
 
 
 def test_format_to_json_dict__when_bag_function_is_not_none_and_bag_recipes_exists__returns_valid_dict(
