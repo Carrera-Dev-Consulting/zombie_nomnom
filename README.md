@@ -7,7 +7,7 @@
 | zombie\_nomnom/\_\_init\_\_.py         |        5 |        0 |     100% |           |
 | zombie\_nomnom/\_\_main\_\_.py         |        0 |        0 |     100% |           |
 | zombie\_nomnom/app.py                  |       11 |        0 |     100% |           |
-| zombie\_nomnom/cli.py                  |       66 |        0 |     100% |           |
+| zombie\_nomnom/cli.py                  |       86 |        0 |     100% |           |
 | zombie\_nomnom/engine/\_\_init\_\_.py  |        4 |        0 |     100% |           |
 | zombie\_nomnom/engine/commands.py      |       37 |        0 |     100% |           |
 | zombie\_nomnom/engine/game.py          |       98 |        0 |     100% |           |
@@ -16,7 +16,7 @@
 | zombie\_nomnom/models/\_\_init\_\_.py  |        3 |        0 |     100% |           |
 | zombie\_nomnom/models/bag.py           |       33 |        0 |     100% |           |
 | zombie\_nomnom/models/dice.py          |       43 |        0 |     100% |           |
-|                              **TOTAL** |  **428** |    **0** | **100%** |           |
+|                              **TOTAL** |  **448** |    **0** | **100%** |           |
 
 
 ## Setup coverage badge
