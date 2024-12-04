@@ -12,11 +12,11 @@
 | zombie\_nomnom/engine/commands.py      |       37 |        0 |     100% |           |
 | zombie\_nomnom/engine/game.py          |       98 |        0 |     100% |           |
 | zombie\_nomnom/engine/models.py        |       64 |        0 |     100% |           |
-| zombie\_nomnom/engine/serialization.py |       66 |        0 |     100% |           |
+| zombie\_nomnom/engine/serialization.py |       64 |        0 |     100% |           |
 | zombie\_nomnom/models/\_\_init\_\_.py  |        3 |        0 |     100% |           |
 | zombie\_nomnom/models/bag.py           |       33 |        0 |     100% |           |
 | zombie\_nomnom/models/dice.py          |       43 |        0 |     100% |           |
-|                              **TOTAL** |  **430** |    **0** | **100%** |           |
+|                              **TOTAL** |  **428** |    **0** | **100%** |           |
 
 
 ## Setup coverage badge
