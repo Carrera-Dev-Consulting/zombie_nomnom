@@ -44,10 +44,13 @@ This module is primarly used by app and should not be used by other parts of our
 
 """
 
+import json
+import os
 from typing import Any, Callable, TypeVar
 import click
 
 from .engine import DrawDice, Player, RoundState, Score, ZombieDieGame
+from .engine.serialization import format_to_json_dict, parse_game_json_dict
 
 draw_command = DrawDice()
 """Command used to draw the dice required for a turn."""
@@ -83,7 +86,7 @@ def score_hand(game: ZombieDieGame):
     click.echo(_format_turn_info(turn))
 
 
-def exit(game: ZombieDieGame):
+def exit_game(game: ZombieDieGame):
     """
     Exits the game by marking the game as over for players
     who wish to finish the current game they are playing
@@ -96,10 +99,30 @@ def exit(game: ZombieDieGame):
     game.game_over = True
 
 
+def save_game(game: ZombieDieGame):
+    click.echo("Saving game...")
+    filepath = click.prompt(
+        "Enter savefile name to save to",
+        type=click.Path(
+            dir_okay=False,
+            writable=True,
+        ),
+    )
+
+    if os.path.exists(filepath):
+        if not click.confirm("Overwrite existing file?", abort=False):
+            return
+
+    with open(filepath, "w") as fp:
+        json.dump(format_to_json_dict(game), fp)
+    click.echo(f"Saved game to {filepath} succesfully!!")
+
+
 _actions: dict[str, Callable[[ZombieDieGame], None]] = {
-    "Exit": exit,
-    "Draw dice": draw_dice,
+    "Exit": exit_game,
+    "Save Game": save_game,
     "Score hand": score_hand,
+    "Draw dice": draw_dice,
 }
 
 
@@ -210,14 +233,7 @@ class StrippedStr(click.ParamType):
             return str(value).strip()
 
 
-def setup_game() -> ZombieDieGame:
-    """Runs the setup game cli prompts for users to enter the players in the game.
-    This will prompt you for each player in the game then create and return the
-    game instance you have with those players.
-
-    **Returns**
-    - `zombie_nomnom.ZombieDieGame`: The instance of the game you setup.
-    """
+def new_game() -> ZombieDieGame:
     names = prompt_list(
         "Enter Player Name",
         _type=StrippedStr(),
@@ -227,6 +243,40 @@ def setup_game() -> ZombieDieGame:
     return ZombieDieGame(
         players=[Player(name=name) for name in names],
     )
+
+
+def load_game() -> ZombieDieGame:
+    filepath = click.prompt(
+        "Enter savefile name to load",
+        type=click.Path(
+            dir_okay=False,
+            exists=True,
+            readable=True,
+        ),
+    )
+
+    with open(filepath, "r") as fp:
+        data = json.load(fp)
+
+    return parse_game_json_dict(data)
+
+
+def setup_game() -> ZombieDieGame:
+    """Runs the setup game cli prompts for users to enter the players in the game.
+    This will prompt you for each player in the game then create and return the
+    game instance you have with those players.
+
+    **Returns**
+    - `zombie_nomnom.ZombieDieGame`: The instance of the game you setup.
+    """
+    callback = select_dict_item(
+        {
+            "Exit": lambda: exit(0),
+            "New Game": new_game,
+            "Load Game": load_game,
+        }
+    )
+    return callback()
 
 
 TVar = TypeVar("TVar")
@@ -245,7 +295,9 @@ def select_dict_item(value: dict[str, TVar]) -> TVar:
     - `TVar`: The value that was selected by the user.
     """
     menu_items = list(value)
-    menu = "\n".join(f"{index}) {item}" for index, item in enumerate(menu_items))
+    menu = "\n".join(
+        f"{index}) {item}" for index, item in reversed(list(enumerate(menu_items)))
+    )
     click.echo(menu)
     selected_index = click.prompt(
         f"Select Item (0-{len(menu_items) - 1})",
