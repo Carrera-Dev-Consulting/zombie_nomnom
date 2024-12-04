@@ -197,3 +197,13 @@ def test_app_when_playing_an_existing_game__loads_from_save_file(
     result = run_game_with_input(input_text)
     assert result.exit_code == 0, result.output
     assert "Players: Milo" in result.output
+
+
+def test_app__when_starting_game__can_immediately_exit(
+    run_game_with_input: Callable[[str], Result],
+):
+    input_text = """0
+"""
+
+    result = run_game_with_input(input_text)
+    assert result.exit_code == 0
