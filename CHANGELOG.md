@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.1.1](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/tree/1.1.1) (2024-12-04)
+
+[Full Changelog](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/compare/1.1.0...1.1.1)
+
+**Fixed bugs:**
+
+- \[BUG\] Using the default constructor to create a game and then using the default serializer does not save as json. [\#63](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/issues/63)
+
+**Merged pull requests:**
+
+- fix\(serialization\): Assume standard bag when seralizing [\#64](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/pull/64) ([gxldCptRick](https://github.com/gxldCptRick))
+- chore\(changelog\): Updating Changelog for version 1.1.0 [\#62](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/pull/62) ([github-actions[bot]](https://github.com/apps/github-actions))
+
 ## [1.1.0](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/tree/1.1.0) (2024-11-24)
 
 [Full Changelog](https://github.com/Carrera-Dev-Consulting/zombie_nomnom/compare/1.0.1...1.1.0)
