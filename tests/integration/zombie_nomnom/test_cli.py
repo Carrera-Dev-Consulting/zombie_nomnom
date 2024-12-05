@@ -83,13 +83,15 @@ def test_app__when_playing_and_drawing_dice__dice_goes_down_by_3_for_first_draw(
     milo
     
     3
+    3
+    3
+    3
+    3
     0
     """
     result = run_game_with_input(cli_input)
     assert "Drawing dice..." in result.output, "Did not display drawing dice"
-    assert (
-        "Dice Remaining: 10" in result.output
-    ), "Did not take three dice correctly from the game."
+    assert "Dice Remaining: 10" in result.output, result.output
 
 
 def test_app__when_playing_and_scoring_hand__scores_dice_and_transitions_turn(
@@ -133,20 +135,13 @@ def test_app__when_playing_and_rolling_until_death__transitions_turn_to_other_pl
 ):
     # this works by putting in the name of the player then new line to tell it to no more players then zero
     # to select exit option and then final new line to not continue
-    cli_input = """1
+    all_the_rolls = "\n".join(["3"] * 26)
+    cli_input = f"""1
     milo
     y
     dean
 
-    3
-    3
-    3
-    3
-    3
-    3
-    3
-    3
-    3
+    {all_the_rolls}
     0
     """
     result = run_game_with_input(cli_input)
