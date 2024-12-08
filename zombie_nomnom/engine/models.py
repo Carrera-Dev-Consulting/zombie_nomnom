@@ -214,5 +214,6 @@ class DieRecipe(BaseModel):
 
     faces: list[Face]
     """The faces that will make up the dice."""
+    name: str | None = None
     amount: int
     """The amount of dice that will be added to the bag."""
