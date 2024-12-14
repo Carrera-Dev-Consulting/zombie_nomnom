@@ -1,4 +1,4 @@
-from typing import Callable, TypeVar
+from typing import Any, Callable, TypeVar
 
 import click
 

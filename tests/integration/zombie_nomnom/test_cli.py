@@ -23,16 +23,22 @@ def run_game_with_input(runner: CliRunner):
     return _run_with_input
 
 
+def start_with_new_game(*, actions: list[str] = None, players=["milo"]):
+    actions_per_line = "\n".join(actions or [])
+    players_per_line = "\ny\n".join(players)
+    return f"""1
+{players_per_line}
+
+{actions_per_line}
+0
+0
+"""
+
+
 def test_app__when_user_types_name__prints_name_to_screen(
     run_game_with_input: Callable[[str], Result]
 ):
-    # this works by putting in the name of the player then new line to tell it to no more players then zero
-    # to select exit option and then final new line to not continue
-    cli_input = """1
-    milo
-
-    0
-    """
+    cli_input = start_with_new_game(players=["milo"])
     result = run_game_with_input(cli_input)
     assert "Players: milo" in result.output
 
@@ -40,19 +46,15 @@ def test_app__when_user_types_name__prints_name_to_screen(
 def test_app__when_replaying_game__setups_game_again(
     run_game_with_input: Callable[[str], Result]
 ):
-    # this works by putting in the name of the player then new line to tell it to no more players then zero
-    # to select exit option and then final new line to not continue
-    cli_input = """1
-    milo
-
-    0
-    y
-    1
-    milo
-    
-    0
-    n
-    """
+    cli_input = start_with_new_game(
+        actions=[
+            "0",
+            "1",
+            "milo",
+            "n",
+        ],
+        players=["milo"],
+    )
     result = run_game_with_input(cli_input)
     assert "Players: milo" in result.output
 
@@ -60,15 +62,9 @@ def test_app__when_replaying_game__setups_game_again(
 def test_app__when_setting_up__allows_multiple_players(
     run_game_with_input: Callable[[str], Result]
 ):
-    # this works by putting in the name of the player then new line to tell it to no more players then zero
-    # to select exit option and then final new line to not continue
-    cli_input = """1
-    milo
-y
-Dean
-
-    0
-    """
+    cli_input = start_with_new_game(
+        players=["milo", "Dean"],
+    )
     result = run_game_with_input(cli_input)
     assert "Players: milo" in result.output
     assert "Dean (0)" in result.output
@@ -77,18 +73,10 @@ Dean
 def test_app__when_playing_and_drawing_dice__dice_goes_down_by_3_for_first_draw(
     run_game_with_input: Callable[[str], Result]
 ):
-    # this works by putting in the name of the player then new line to tell it to no more players then zero
-    # to select exit option and then final new line to not continue
-    cli_input = """1
-    milo
-    
-    3
-    3
-    3
-    3
-    3
-    0
-    """
+    cli_input = start_with_new_game(
+        players=["milo"],
+        actions=["3"] * 5,
+    )
     result = run_game_with_input(cli_input)
     assert "Drawing dice..." in result.output, "Did not display drawing dice"
     assert "Dice Remaining: 10" in result.output, result.output
@@ -97,34 +85,10 @@ def test_app__when_playing_and_drawing_dice__dice_goes_down_by_3_for_first_draw(
 def test_app__when_playing_and_scoring_hand__scores_dice_and_transitions_turn(
     run_game_with_input: Callable[[str], Result]
 ):
-    # this works by putting in the name of the player then new line to tell it to no more players then zero
-    # to select exit option and then final new line to not continue
-    cli_input = """1
-    milo
-    y
-    dean
-    n
-    2
-    0
-    """
-    result = run_game_with_input(cli_input)
-    assert "Scoring hand..." in result.output, "Did not display scoring hand..."
-    assert "Currently Playing dean" in result.output, "Did not display deans turn..."
-
-
-def test_app__when_playing_and_scoring_hand__scores_dice_and_transitions_turn(
-    run_game_with_input: Callable[[str], Result],
-):
-    # this works by putting in the name of the player then new line to tell it to no more players then zero
-    # to select exit option and then final new line to not continue
-    cli_input = """1
-    milo
-    y
-    dean
-    n
-    2
-    0
-    """
+    cli_input = cli_input = start_with_new_game(
+        actions=["2"],
+        players=["milo", "dean"],
+    )
     result = run_game_with_input(cli_input)
     assert "Scoring hand..." in result.output, "Did not display scoring hand..."
     assert "Currently Playing dean" in result.output, "Did not display deans turn..."
@@ -133,17 +97,10 @@ def test_app__when_playing_and_scoring_hand__scores_dice_and_transitions_turn(
 def test_app__when_playing_and_rolling_until_death__transitions_turn_to_other_player(
     run_game_with_input: Callable[[str], Result]
 ):
-    # this works by putting in the name of the player then new line to tell it to no more players then zero
-    # to select exit option and then final new line to not continue
-    all_the_rolls = "\n".join(["3"] * 26)
-    cli_input = f"""1
-    milo
-    y
-    dean
-
-    {all_the_rolls}
-    0
-    """
+    cli_input = start_with_new_game(
+        actions=["3"] * 26,
+        players=["milo", "Dean"],
+    )
     result = run_game_with_input(cli_input)
     assert "milo Has Died" in result.output, "He is a god gamer and survived."
 
@@ -159,19 +116,16 @@ def test_app__when_playing_save_game_writes_to_file(
     tmp_path: str,
 ):
     save_file_path = os.path.join(tmp_path, "test_save.json")
-    result = run_game_with_input(
-        f"""1
-milo
-y
-dean
-
-3
-2
-1
-{save_file_path}
-0
-"""
+    cli_input = start_with_new_game(
+        players=["milo", "dean"],
+        actions=[
+            "3",
+            "2",
+            "1",
+            save_file_path,
+        ],
     )
+    result = run_game_with_input(cli_input)
     assert result.exit_code == 0, result.output
     assert os.path.exists(save_file_path), "Save file was not created"
 
@@ -187,7 +141,7 @@ def test_app_when_playing_an_existing_game__loads_from_save_file(
 {save_file_path}
 3
 0
-"""
+0"""
 
     result = run_game_with_input(input_text)
     assert result.exit_code == 0, result.output
@@ -219,7 +173,7 @@ def test_app__when_saving_on_existing_file__prompts_for_overwrite(
 {save_file_path}
 y
 0
-"""
+0"""
 
     result = run_game_with_input(input_text)
     assert result.exit_code == 0
@@ -241,7 +195,7 @@ def test_app__when_saving_on_existing_file__does_not_overwrite(
 {save_file_path}
 n
 0
-"""
+0"""
 
     result = run_game_with_input(input_text)
     assert result.exit_code == 0
