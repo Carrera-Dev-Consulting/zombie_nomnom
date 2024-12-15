@@ -6,6 +6,8 @@ to also run this as a web app including a built in server with react spa app.
 """
 
 import click
+
+from zombie_nomnom.cli.edit import run_editor
 from .cli import run_game
 
 
@@ -38,3 +40,8 @@ def cli():
             game = run_game(game)
     except KeyboardInterrupt:
         click.echo("Thank you for playing!!")
+
+
+@main.command("edit")
+def edit():
+    run_editor()

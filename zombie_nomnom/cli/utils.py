@@ -98,6 +98,7 @@ def select_list_item(value: list[TVar]) -> TVar:
     )
     return value[selected_index]
 
+
 def replayable_menu(
     actions: dict[str, Callable],
     *args,
@@ -105,7 +106,7 @@ def replayable_menu(
     post: Callable | None = None,
     **kwargs,
 ):
-    if len(dict) == 0:
+    if len(actions) == 0:
         raise ValueError("Cannot have an empty menu")
     active = True
 
@@ -113,7 +114,7 @@ def replayable_menu(
         nonlocal active
         active = False
 
-    _menu = {"Exit": _exit**actions}
+    _menu = {"Exit": _exit, **actions}
 
     while active:
         if pre:
