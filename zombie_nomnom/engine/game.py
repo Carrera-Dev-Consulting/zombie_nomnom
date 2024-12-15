@@ -31,6 +31,7 @@ def bag_from_recipes(dice_recipes: list[DieRecipe]):
             dice.extend(
                 Die(
                     faces=deepcopy(recipe.faces),
+                    name=recipe.name,
                 )
                 for _ in range(recipe.amount)
             )

@@ -6,6 +6,8 @@ to also run this as a web app including a built in server with react spa app.
 """
 
 import click
+
+from zombie_nomnom.cli.edit import run_editor
 from .cli import run_game
 
 
@@ -32,10 +34,14 @@ def cli():
     """
     Command to start the zombie_dice game from the command line.
     """
-    run_game()
+    try:
+        game = None
+        while True:
+            game = run_game(game)
+    except KeyboardInterrupt:
+        click.echo("Thank you for playing!!")
 
-    # ask after we finish a single game assume they will quit when they want to.
-    while click.confirm(text="Play another game of zombie dice?"):
-        run_game()
 
-    click.echo("Thank you for playing!!")
+@main.command("edit")
+def edit():
+    run_editor()
